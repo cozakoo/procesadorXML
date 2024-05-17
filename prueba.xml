@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<presentacion>
+	<periodo>2023</periodo>
+	<nroPresentacion>3</nroPresentacion>
+	<fechaPresentacion>2023-02-15</fechaPresentacion>
+	<empleado>
+		<cuit>20246145297</cuit>
+		<tipoDoc>80</tipoDoc>
+		<apellido>PICCO</apellido>
+		<nombre>MARTIN HUGO</nombre>
+		<direccion>
+			<provincia>17</provincia>
+			<cp>9103</cp>
+			<localidad>PLAYA UNION</localidad>
+			<calle>TENIENTE CORONEL ROA</calle>
+			<nro>2252</nro>
+		</direccion>
+	</empleado>
+	<cargasFamilia>
+		<cargaFamilia>
+			<tipoDoc>86</tipoDoc>
+			<nroDoc>20471496392</nroDoc>
+			<apellido>PICCO TIZIANO EMANUEL</apellido>
+			<nombre></nombre>
+			<fechaNac>2006-03-07</fechaNac>
+			<mesDesde>1</mesDesde>
+			<mesHasta>12</mesHasta>
+			<parentesco>3</parentesco>
+			<vigenteProximosPeriodos>S</vigenteProximosPeriodos>
+			<porcentajeDeduccion>100</porcentajeDeduccion>
+		</cargaFamilia>
+		<cargaFamilia>
+			<tipoDoc>86</tipoDoc>
+			<nroDoc>27494897798</nroDoc>
+			<apellido>PICCO</apellido>
+			<nombre>GIULIANA MACARENA</nombre>
+			<fechaNac>2009-10-05</fechaNac>
+			<mesDesde>1</mesDesde>
+			<mesHasta>12</mesHasta>
+			<parentesco>3</parentesco>
+			<vigenteProximosPeriodos>S</vigenteProximosPeriodos>
+			<porcentajeDeduccion>100</porcentajeDeduccion>
+		</cargaFamilia>
+	</cargasFamilia>
+	<ganLiqOtrosEmpEnt>
+		<empEnt>
+			<cuit>30711153329</cuit>
+			<denominacion>UNIVERSIDAD DEL CHUBUT</denominacion>
+			<ingresosAportes/>
+		</empEnt>
+	</ganLiqOtrosEmpEnt>
+	<deducciones>
+		<deduccion tipo="2">
+			<tipoDoc>80</tipoDoc>
+			<nroDoc>30500011072</nroDoc>
+			<denominacion>BANCO HIPOTECARIO SOCIEDAD ANONIMA</denominacion>
+			<descBasica>30500011072 - BANCO HIPOTECARIO SOCIEDAD ANONIMA</descBasica>
+			<montoTotal>47.66</montoTotal>
+			<periodos>
+				<periodo mesDesde="1" mesHasta="1" montoMensual="47.66"/>
+			</periodos>
+		</deduccion>
+		<deduccion tipo="2">
+			<tipoDoc>80</tipoDoc>
+			<nroDoc>30500031960</nroDoc>
+			<denominacion>SMG COMPA#IA ARGENTINA DE SEGUROS SOCIEDAD ANONIMA</denominacion>
+			<descBasica>30500031960 - SMG COMPA#IA ARGENTINA DE SEGUROS SOCIEDAD ANONIMA</descBasica>
+			<montoTotal>4124</montoTotal>
+			<periodos>
+				<periodo mesDesde="1" mesHasta="2" montoMensual="2062"/>
+			</periodos>
+		</deduccion>
+		<deduccion tipo="2">
+			<tipoDoc>80</tipoDoc>
+			<nroDoc>30698953752</nroDoc>
+			<denominacion>PRUDENTIAL  SEGUROS  S A</denominacion>
+			<descBasica>30698953752 - PRUDENTIAL  SEGUROS  S A</descBasica>
+			<montoTotal>864.8</montoTotal>
+			<periodos>
+				<periodo mesDesde="1" mesHasta="2" montoMensual="432.4"/>
+			</periodos>
+		</deduccion>
+		<deduccion tipo="4">
+			<tipoDoc>80</tipoDoc>
+			<nroDoc>30500011072</nroDoc>
+			<denominacion>BANCO HIPOTECARIO SOCIEDAD ANONIMA</denominacion>
+			<descBasica>30500011072 - BANCO HIPOTECARIO SOCIEDAD ANONIMA</descBasica>
+			<montoTotal>224.68</montoTotal>
+			<periodos>
+				<periodo mesDesde="1" mesHasta="1" montoMensual="224.68"/>
+			</periodos>
+		</deduccion>
+	</deducciones>
+	<datosAdicionales>
+		<datoAdicional nombre="trabRegPatagonica" mesDesde="1" mesHasta="2" valor="S"/>
+	</datosAdicionales>
+</presentacion>
