@@ -7,6 +7,7 @@ package com.mycompany.procesadorxmlmaven;
 import com.mycompany.SeccionA.CargaFamilia;
 import com.mycompany.SeccionA.Direccion;
 import com.mycompany.SeccionA.Empleado;
+import com.mycompany.SeccionA.EmpleadoEntidad;
 import com.mycompany.SeccionA.Presentacion;
 import java.io.File;
 import javax.xml.bind.JAXBContext;
@@ -30,7 +31,7 @@ public class ProcesadorXMLmaven {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             // Leer el archivo XML y convertirlo a objeto Java
-            Presentacion presentacion = (Presentacion) unmarshaller.unmarshal(new File("prueba.xml"));
+            Presentacion presentacion = (Presentacion) unmarshaller.unmarshal(new File("prueba_a_edit.xml"));
 
             // Mostrar los datos
             System.out.println("Periodo: " + presentacion.getPeriodo());
@@ -49,9 +50,29 @@ public class ProcesadorXMLmaven {
             System.out.println("    Localidad: " + direccion.getLocalidad());
             System.out.println("    Calle: " + direccion.getCalle());
             System.out.println("    Nro: " + direccion.getNro());
-            System.out.println("cargasFamilia: " + direccion.getNro());
+            System.out.println("cargasFamilia: ");
              for (CargaFamilia item: presentacion.getCargasFamilia().getCargasFamilia()) {
+                 System.out.println("   ------------------ ");
+                 System.out.println("    Tipo doc : " + item.getTipoDoc());
                  System.out.println("    Nro documento familia : " + item.getNroDoc());
+                 System.out.println("    Apellido: " + item.getApellido());
+                 System.out.println("    Nombre : " + item.getNombre());
+                 System.out.println("    fechaNac: " + item.getFechaNac());
+                 System.out.println("    mesdeDesde : " + item.getMesDesde());
+                 System.out.println("    mesHasta : " + item.getMesHasta());
+                 System.out.println("   ------------------ ");
+                 //generar tabla
+             }
+              System.out.println("ganLiqOTrosEmpl: ");
+             for (EmpleadoEntidad item: presentacion.getGanLiqOtrosEmpEnt().getEmpleadosEntidadType()) {
+                 System.out.println("   ------------------ ");
+                 System.out.println("    cuit : " + item.getCuit());
+                 System.out.println("    denominacc : " + item.getDenominacion());
+                  System.out.println("   ingresosAportes : " + item.getIngresosAportes());
+                 System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
+                 System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
+                 System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
+                 
              }
 
         } catch (JAXBException e) {

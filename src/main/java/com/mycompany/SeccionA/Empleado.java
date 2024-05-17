@@ -4,6 +4,7 @@
  */
 package com.mycompany.SeccionA;
 
+import com.mycompany.SimpleType.CuitSimpleType;
 import javax.xml.bind.annotation.*;
 /**
  *
@@ -11,19 +12,23 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Empleado {
-    private String cuit;
+    private long cuit;
     private String tipoDoc;
     private String apellido;
     private String nombre;
     private Direccion direccion;
-
-    public String getCuit() {
+        
+    public long getCuit() {
+        
         return cuit;
     }
 
-    public void setCuit(String cuit) {
+    public void setCuit(long cuit) {
         this.cuit = cuit;
     }
+
+   
+ 
 
     public String getTipoDoc() {
         return tipoDoc;

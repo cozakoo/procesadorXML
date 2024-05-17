@@ -22,6 +22,16 @@ public class Presentacion {
     private String fechaPresentacion;
     private Empleado empleado;
     private CargasFamilia cargasFamilia;
+    private ganLiqOtrosEmpEnt ganLiqOtrosEmpEnt;
+
+    public ganLiqOtrosEmpEnt getGanLiqOtrosEmpEnt() {
+        return ganLiqOtrosEmpEnt;
+    }
+
+    public void setGanLiqOtrosEmpEnt(ganLiqOtrosEmpEnt ganLiqOtrosEmpEnt) {
+        this.ganLiqOtrosEmpEnt = ganLiqOtrosEmpEnt;
+    }
+    
 
     public CargasFamilia getCargasFamilia() {
         return cargasFamilia;
