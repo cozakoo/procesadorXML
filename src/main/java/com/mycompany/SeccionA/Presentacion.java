@@ -23,6 +23,7 @@ public class Presentacion {
     private Empleado empleado;
     private CargasFamilia cargasFamilia;
     private ganLiqOtrosEmpEnt ganLiqOtrosEmpEnt;
+    private Deducciones deducciones;
 
     public ganLiqOtrosEmpEnt getGanLiqOtrosEmpEnt() {
         return ganLiqOtrosEmpEnt;

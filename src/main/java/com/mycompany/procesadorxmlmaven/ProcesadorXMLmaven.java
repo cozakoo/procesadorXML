@@ -31,7 +31,7 @@ public class ProcesadorXMLmaven {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             // Leer el archivo XML y convertirlo a objeto Java
-            Presentacion presentacion = (Presentacion) unmarshaller.unmarshal(new File("prueba_a_edit.xml"));
+            Presentacion presentacion = (Presentacion) unmarshaller.unmarshal(new File("prueba_a.xml"));
 
             // Mostrar los datos
             System.out.println("Periodo: " + presentacion.getPeriodo());
@@ -70,13 +70,15 @@ public class ProcesadorXMLmaven {
                  System.out.println("    denominacc : " + item.getDenominacion());
                   System.out.println("   ingresosAportes : " + item.getIngresosAportes());
                  System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
-                 System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
+                 System.out.println("    transporteTerrLargaDist : " + item.getTransporteTerrLargaDist());
                  System.out.println("    transporteLargaDist : " + item.getTransporteLargaDist());
                  
              }
 
         } catch (JAXBException e) {
+            
             e.printStackTrace();
+            
         }
     }
 }
