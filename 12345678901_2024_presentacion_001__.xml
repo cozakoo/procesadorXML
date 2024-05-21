@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<presentacion>
+	<periodo>2023</periodo>
+	<nroPresentacion>3</nroPresentacion>
+	<fechaPresentacion>2023-02-15</fechaPresentacion>
+	<empleado>
+		<cuit>20246145297</cuit>
+		<tipoDoc>80</tipoDoc>
+		<apellido>PICCO</apellido>
+		<nombre>MARTIN HUGO</nombre>
+		<direccion>
+			<provincia>17</provincia>
+			<cp>9103</cp>
+			<localidad>PLAYA UNION</localidad>
+			<calle>TENIENTE CORONEL ROA</calle>
+			<nro>2252</nro>
+		</direccion>
+	</empleado>
+</presentacion>

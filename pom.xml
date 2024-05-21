@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <exec.mainClass>com.mycompany.procesadorxmlmaven.ProcesadorXMLmaven</exec.mainClass>
+        <exec.mainClass>main.Main</exec.mainClass>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
@@ -31,7 +31,7 @@
 </descriptorRefs>
 <archive>
 <manifest>
-<mainClass>com.mycompany.procesadorxmlmaven.ProcesadorXMLmaven</mainClass>
+<mainClass>main.Main</mainClass>
 </manifest>
 </archive>
 </configuration>
