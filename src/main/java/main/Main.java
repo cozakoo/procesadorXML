@@ -1,22 +1,18 @@
 package main;
 
-import javax.xml.bind.JAXBException;
-import xml.XMLSeccionA;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import IU.XMLFileProcessorFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main {
 
-    public static void main(String[] args) {
-        String nombreArchivo = "12345678901_2024_presentacion_001.xml";
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
-        if (XMLSeccionA.esNombreValido(nombreArchivo)) {
-            try {
-                XMLSeccionA seccionA = new XMLSeccionA(nombreArchivo);
-                System.out.println(seccionA.toString());
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("El nombre del archivo no es válido.");
-        }
+        java.awt.EventQueue.invokeLater(() -> {
+            new XMLFileProcessorFrame().setVisible(true);
+        });
     }
+
 }

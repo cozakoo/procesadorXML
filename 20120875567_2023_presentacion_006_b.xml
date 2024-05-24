@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<presentacion>
+	<periodo>2023</periodo>
+	<nroPresentacion>6</nroPresentacion>
+	<fechaPresentacion>2023-08-21</fechaPresentacion>
+	<empleado>
+		<cuit>20120875567</cuit>
+		<tipoDoc>80</tipoDoc>
+		<apellido>DASTUGUE</apellido>
+		<nombre>RAUL VICTOR</nombre>
+		<direccion>
+			<provincia>17</provincia>
+			<cp>9100</cp>
+			<localidad>TRELEW</localidad>
+			<calle>LAS ACACIAS</calle>
+			<nro>431</nro>
+		</direccion>
+	</empleado>
+	<agenteRetencion>
+		<cuit>30999222907</cuit>
+		<denominacion>INSTITUTO DE SEGURIDAD SOCIAL Y SEGUROS DE LA PROVINCIA DEL CHUBUT</denominacion>
+	</agenteRetencion>
+</presentacion>
