@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
 import static util.FileUtils.esSeccionA;
 import static util.FileUtils.esSeccionB;
+import util.Mensaje;
 import xml.XMLSeccionA;
 import xml.XMLSeccionB;
 
@@ -67,6 +68,11 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
 
     private void jButtonOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenFileActionPerformed
 
+        selectAndProcessXMLFile();
+
+    }//GEN-LAST:event_jButtonOpenFileActionPerformed
+
+    private void selectAndProcessXMLFile() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
         fileChooser.setFileFilter(filter);
@@ -75,51 +81,47 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            String absolutePath = selectedFile.getAbsolutePath();
-            String relativePath = getRelativePath(absolutePath);
             String fileName = selectedFile.getName(); // Obtiene solo el nombre del archivo
-            processXMLFile(relativePath, fileName);
-        }
-    }//GEN-LAST:event_jButtonOpenFileActionPerformed
-
-    private void processXMLFile(String filePath, String fileName) {
-
-        System.out.println("fileName : " + fileName);
-
-        if (esSeccionA(fileName)) {
-            if (XMLSeccionA.esNombreValido(fileName)) {
-                try {
-                    XMLSeccionA seccionA = new XMLSeccionA(fileName);
-                    jTextAreaOutput.setText(seccionA.toString());
-
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                    jTextAreaOutput.setText("Error processing Seccion A file.");
-                }
-            } else {
-                jTextAreaOutput.setText("El nombre del archivo no es válido para Seccion A.");
-            }
-        } else if (esSeccionB(fileName)) {
-            if (XMLSeccionB.esNombreValido(fileName)) {
-                try {
-                    XMLSeccionB seccionB = new XMLSeccionB(fileName);
-                    jTextAreaOutput.setText(seccionB.toString());
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                    jTextAreaOutput.setText("Error processing Seccion B file.");
-                }
-            } else {
-                jTextAreaOutput.setText("El nombre del archivo no es válido para Seccion B.");
-            }
-        } else {
-            jTextAreaOutput.setText("El nombre del archivo no corresponde a una sección válida.");
+            processXMLFile(fileName);
         }
     }
 
-    public static String getRelativePath(String absolutePath) {
-        Path currentPath = Paths.get("").toAbsolutePath();
-        Path filePath = Paths.get(absolutePath);
-        return currentPath.relativize(filePath).toString();
+    private void processXMLFile(String fileName) {
+        if (esSeccionA(fileName)) {
+            processSeccionA(fileName);
+        } else if (esSeccionB(fileName)) {
+            processSeccionB(fileName);
+        } else {
+            Mensaje.error("El nombre del archivo no corresponde a una sección válida.");
+        }
+    }
+
+    private void processSeccionA(String fileName) {
+        if (XMLSeccionA.esNombreValido(fileName)) {
+            try {
+                XMLSeccionA seccionA = new XMLSeccionA(fileName);
+                jTextAreaOutput.setText(seccionA.toString());
+            } catch (JAXBException e) {
+                e.printStackTrace();
+                Mensaje.error("Error processing Seccion A file.");
+            }
+        } else {
+            Mensaje.error("El nombre del archivo no es válido para Seccion A.");
+        }
+    }
+
+    private void processSeccionB(String fileName) {
+        if (XMLSeccionB.esNombreValido(fileName)) {
+            try {
+                XMLSeccionB seccionB = new XMLSeccionB(fileName);
+                jTextAreaOutput.setText(seccionB.toString());
+            } catch (JAXBException e) {
+                e.printStackTrace();
+                Mensaje.error("Error processing Seccion B file.");
+            }
+        } else {
+            Mensaje.error("El nombre del archivo no es válido para Seccion B.");
+        }
     }
 
     public static void main(String args[]) {
