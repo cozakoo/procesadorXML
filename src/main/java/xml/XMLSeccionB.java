@@ -21,7 +21,9 @@ public class XMLSeccionB extends XMLSeccion {
     @XmlElement(name = "presentacion")
     private presentacionTypeSeccionB presentacion;
 
+
     public XMLSeccionB(String nombreArchivo) throws JAXBException {
+        super(nombreArchivo); // Llama al constructor de la clase base para validar y extraer el periodo
         JAXBContext jaxbContext = JAXBContext.newInstance(presentacionTypeSeccionB.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         this.presentacion = (presentacionTypeSeccionB) unmarshaller.unmarshal(new File(nombreArchivo));
@@ -38,4 +40,10 @@ public class XMLSeccionB extends XMLSeccion {
         return presentacion.toString();
 
     }
+
+    @Override
+    public void validarPresentacion() throws JAXBException {
+        // Validation logic for Seccion B
+    }
+
 }

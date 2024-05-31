@@ -56,4 +56,10 @@ public class presentacionTypeSeccionA extends PresentacionType {
         return super.toString();
     }
 
+    @Override
+    public void validar(String periodo) {
+        
+        super.validar(periodo);
+        
+    }
 }

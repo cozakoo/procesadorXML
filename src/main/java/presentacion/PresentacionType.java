@@ -42,4 +42,19 @@ public class PresentacionType {
 
     }
 
+    public void validar(String periodo) {
+        this.validarPeriodo(periodo);
+    }
+
+    private void validarPeriodo(String periodo) {
+
+        if (periodo == this.periodo) {
+            
+        }
+        System.out.println("-------------");
+        System.out.println("SOY EL PERIODO");
+        System.out.println(this.periodo);
+        System.out.println("-------------");
+    }
+
 }

@@ -19,6 +19,11 @@
             <version>2.3.1</version>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.24</version> <!-- Asegúrate de usar la versión más reciente -->
+        </dependency>
+        <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.3</version>
@@ -26,33 +31,33 @@
         </dependency>
     </dependencies>
     <build>
-<plugins>
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-assembly-plugin</artifactId>
-<version>3.3.0</version>
-<configuration>
-<descriptorRefs>
-<descriptorRef>jar-with-dependencies</descriptorRef>
-</descriptorRefs>
-<archive>
-<manifest>
-<mainClass>main.Main</mainClass>
-</manifest>
-</archive>
-</configuration>
-<executions>
-<execution>
-<id>make-assembly</id>
-<!--  this is used for inheritance merges  -->
-<phase>package</phase>
-<!--  bind to the packaging phase  -->
-<goals>
-<goal>single</goal>
-</goals>
-</execution>
-</executions>
-</plugin>
-</plugins>
-</build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>main.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!--  this is used for inheritance merges  -->
+                        <phase>package</phase>
+                        <!--  bind to the packaging phase  -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
