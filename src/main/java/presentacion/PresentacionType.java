@@ -47,8 +47,8 @@ public class PresentacionType {
     }
 
     private void validarPeriodo(String periodo) {
-
-        if (periodo == this.periodo) {
+        
+        if ( Integer.parseInt(periodo)== this.periodo) {
             
         }
         System.out.println("-------------");
