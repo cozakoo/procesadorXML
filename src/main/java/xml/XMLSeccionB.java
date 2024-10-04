@@ -22,11 +22,14 @@ public class XMLSeccionB extends XMLSeccion {
     private presentacionTypeSeccionB presentacion;
 
 
-    public XMLSeccionB(String nombreArchivo) throws JAXBException {
-        super(nombreArchivo); // Llama al constructor de la clase base para validar y extraer el periodo
+    public XMLSeccionB(File selectedFile) throws JAXBException {
+//        if(!esNombreValido(selectedFile.getName())){
+//            throw new IllegalArgumentException("El nombre del archivo no es válido.");
+//        }
+        super(selectedFile);
         JAXBContext jaxbContext = JAXBContext.newInstance(presentacionTypeSeccionB.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        this.presentacion = (presentacionTypeSeccionB) unmarshaller.unmarshal(new File(nombreArchivo));
+        this.presentacion = (presentacionTypeSeccionB) unmarshaller.unmarshal(selectedFile);
     }
 
     public static boolean esNombreValido(String nombre) {
@@ -37,6 +40,7 @@ public class XMLSeccionB extends XMLSeccion {
 
     @Override
     public String toString() {
+        
         return presentacion.toString();
 
     }
@@ -44,6 +48,7 @@ public class XMLSeccionB extends XMLSeccion {
     @Override
     public void validarPresentacion() throws JAXBException {
         // Validation logic for Seccion B
+        this.presentacion.validar(getPeriodo());
     }
 
 }

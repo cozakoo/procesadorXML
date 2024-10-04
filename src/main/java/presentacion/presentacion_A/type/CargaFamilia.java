@@ -1,4 +1,4 @@
-package presentacion_A.type;
+package presentacion.presentacion_A.type;
 
 import javax.xml.bind.annotation.*;
 import util.Persona;
@@ -54,9 +54,15 @@ public class CargaFamilia extends Persona{
         return vigenteProximosPeriodos;
     }
 
+    public String getFechaLimite() {
+        return fechaLimite;
+    }
+
     public short getPorcentajeDeduccion() {
         return porcentajeDeduccion;
     }
+
+   
 
     
     

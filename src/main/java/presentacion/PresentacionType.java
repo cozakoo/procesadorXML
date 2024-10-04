@@ -42,14 +42,29 @@ public class PresentacionType {
 
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("-------- CABECERA --------------- \n");
+        sb.append("Periodo: ").append(this.getPeriodo()).append("\n");
+        sb.append("nroPresentacion: ").append(this.getNroPresentacion()).append("\n");
+        sb.append("fechaPresentacion: ").append(this.getFechaPresentacion()).append("\n");
+
+        // Asumiendo que `empleado.imprimirDatos()` también puede ser un `toString()` o retornar un String
+        sb.append(this.getEmpleado().toString()).append("\n");
+
+        return sb.toString();
+    }
+
     public void validar(String periodo) {
         this.validarPeriodo(periodo);
     }
 
     private void validarPeriodo(String periodo) {
-        
-        if ( Integer.parseInt(periodo)== this.periodo) {
-            
+
+        if (Integer.parseInt(periodo) == this.periodo) {
+
         }
         System.out.println("-------------");
         System.out.println("SOY EL PERIODO");

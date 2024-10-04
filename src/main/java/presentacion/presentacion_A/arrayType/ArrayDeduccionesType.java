@@ -5,7 +5,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import presentacion_A.type.ConceptoType;
+import presentacion.presentacion_A.type.ConceptoType;
+import util.XmlUtils;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ArrayDeduccionesType {
@@ -14,21 +15,34 @@ public class ArrayDeduccionesType {
     private List<ConceptoType> deduccion = new ArrayList<>();
 
     @Override
+
     public String toString() {
+        StringBuilder sb = new StringBuilder();
 
         for (ConceptoType concepto : deduccion) {
-            System.out.print("--- DEDUCCION ");
-            System.out.println("tipo: " + concepto.getTipo());
-            System.out.println("tipoDoc: " + concepto.getTipoDoc());
-            System.out.println("nroDoc: " + concepto.getNroDoc());
-            System.out.println("denominacion: " + concepto.getDenominacion());
-            System.out.println("descBasica: " + concepto.getDescBasica());
-            System.out.println("montoTotal: " + concepto.getMontoTotal());
+            sb.append("------------DEDUCCION-------------------- \n");
+            sb.append("tipo: ").append(concepto.getTipo()).append("\n");
+            sb.append("tipoDoc: ").append(concepto.getTipoDoc()).append("\n");
+            sb.append("nroDoc: ").append(concepto.getNroDoc()).append("\n");
+            sb.append("denominacion: ").append(concepto.getDenominacion()).append("\n");
+            sb.append("descBasica: ").append(concepto.getDescBasica()).append("\n");
+            sb.append("montoTotal: ").append(concepto.getMontoTotal()).append("\n");
+
+            sb.append("----------- PERIODOS ----------- \n");
+            if(XmlUtils.ExisteEtiqueta(concepto.getPeriodos()))
+               sb.append(concepto.getPeriodos().toString()).append("\n");
             
-            System.out.println("----------- PERIODOS ----------- ");
-            concepto.getPeriodos().toString();
+
+            sb.append("----------- DETALLES ----------- \n");
+            if(XmlUtils.ExisteEtiqueta(concepto.getDetalles())){
+              System.out.println("detalles distinto de null");
+              sb.append(concepto.getDetalles().toString()).append("\n");
+            }
+            
+            sb.append("---------------------------------------------- \n");
         }
-        return null;
+
+        return sb.toString();
     }
 
 }

@@ -15,9 +15,12 @@ class AgentesRetencionType {
 
     @Override
     public String toString() {
-        System.out.println("cuit: " + this.cuit);
-        System.out.println("denominacion: " + this.denominacion);
-        return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("--------AGENTE DE RETENCION--------").append("\n");
+        sb.append("cuit: ").append(this.cuit).append("\n");
+        sb.append("denominacion: ").append(this.denominacion);
+        return sb.toString();
+
     }
-    
+
 }

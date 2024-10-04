@@ -123,14 +123,14 @@ INSERT INTO motivos (codigo, descripcion) VALUES
 (8, 'Fondos Compensadores de Previsión'),
 (9, 'Otros');
 
--- Crear la tabla ajustes
--- CREATE TABLE ajustes (
+-- Crear la tabla s
+-- CREATE TABLE s (
 --     codigo INTEGER PRIMARY KEY,
 --     descripcion VARCHAR(255)
 -- );
 
 -- -- Insertar los datos
-INSERT INTO ajustes (codigo, descripcion) VALUES
+INSERT INTO s (codigo, descripcion) VALUES
 (1, 'Montos Retroactivos'),
 (2, 'Reintegros de Soc. de Garantia Recíproca Art. 79 Párrafo 2 y Párrafo 3');
 

@@ -15,10 +15,11 @@ public class presentacionTypeSeccionB extends PresentacionType {
 
     @Override
     public String toString() {
-        super.imprimirCabecera();
-        System.out.println("");
-        System.out.println("-------- AgentesRetencion ---------------");
-        this.agenteRetencion.toString();
-        return super.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("PRESENTACION TIPO B").append("\n")
+                .append(super.toString())
+                .append(this.agenteRetencion.toString()).append("\n");
+
+        return sb.toString();
     }
 }

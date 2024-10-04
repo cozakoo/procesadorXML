@@ -1,5 +1,6 @@
 package xml;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
@@ -22,11 +23,13 @@ public abstract class XMLSeccion {
         return matcher.matches();
     }
 
-    public XMLSeccion(String fileName) throws JAXBException {
-        if (!esNombreValido(fileName)) {
-            throw new IllegalArgumentException("El nombre del archivo no es válido.");
-        }
-        this.periodo = extractPeriodo(fileName);
+    public XMLSeccion(File selectedFile) throws JAXBException {
+        
+//        System.out.println("name:"+ selectedFile.getName());
+//        if (!esNombreValido(selectedFile.getName())) {
+//            throw new IllegalArgumentException("El nombre del archivo no es válido.");
+//        }
+        this.periodo = extractPeriodo(selectedFile.getName());
     }
 
     private String extractPeriodo(String fileName) {

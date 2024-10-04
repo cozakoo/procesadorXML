@@ -63,4 +63,14 @@ public class DireccionType {
         System.out.println("calle: " + this.calle);
         System.out.println("nro: " + this.nro);
     }
+
+    @Override
+    public String toString() {
+        return "provincia: " + this.provincia + "\n"
+                + "cp: " + this.cp + "\n"
+                + "localidad: " + this.localidad + "\n"
+                + "calle: " + this.calle + "\n"
+                + "nro: " + this.nro + "\n";
+    }
+
 }
