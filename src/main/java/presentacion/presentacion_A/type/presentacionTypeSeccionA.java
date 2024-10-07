@@ -59,6 +59,9 @@ public class presentacionTypeSeccionA extends PresentacionType {
         sb.append("-------- DEDUCCIONES ---------------\n");
         if (ExisteEtiqueta(this.deducciones)) {
             sb.append(this.deducciones.toString()).append("\n");
+//            for ( object :this.deducciones.gr ) {
+//                
+//            }
         }
        
         sb.append("-------- RETENCION PAGOS ----------\n");
@@ -89,4 +92,30 @@ public class presentacionTypeSeccionA extends PresentacionType {
         super.validar(periodo);
 
     }
+
+    public ArrayCargasFamiliaType getCargasFamilia() {
+        return cargasFamilia;
+    }
+
+    public ArrayOtrosEmpEntType getGanLiqOtrosEmpEnt() {
+        return ganLiqOtrosEmpEnt;
+    }
+
+    public ArrayDeduccionesType getDeducciones() {
+        return deducciones;
+    }
+
+    public ArrayRetPerPagosType getRetPerPagos() {
+        return retPerPagos;
+    }
+
+    public ArrayAjustesType getAjustes() {
+        return ajustes;
+    }
+
+    public ArrayDatosAdicionalesType getDatosAdicionales() {
+        return datosAdicionales;
+    }
+    
+
 }

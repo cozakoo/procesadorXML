@@ -13,4 +13,10 @@ public class XmlUtils {
         // Lógica para determinar si es Sección B
         return obj != null;
     }
+
+    public static int obtenerDni(String cuit){
+           return Integer.parseInt(cuit.substring(2, 9));
+    }
 }
+
+

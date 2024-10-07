@@ -51,4 +51,11 @@ public class XMLSeccionB extends XMLSeccion {
         this.presentacion.validar(getPeriodo());
     }
 
+    @Override
+    public void insertarEnBD() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+ 
+
 }

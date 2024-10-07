@@ -5,6 +5,7 @@ import static io.github.cdimascio.dotenv.DslKt.dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -36,5 +37,21 @@ public class DataBase {
 
         }
     }
+    
+      public ResultSet consulta(String query) {
+        try {
+            this.sql = query;
+            return stmt.executeQuery(query);
+        } catch (SQLException ex) {
+            System.out.println("Consulta vacía");
+        }
+        return null;
+    }
+      
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        return conection.prepareStatement(sql);
+    }
+    
+    
 
 }

@@ -48,4 +48,11 @@ public abstract class XMLSeccion {
     public void validarPresentacion() throws JAXBException {
 
     }
+    
+    public static boolean EsDclaracionActualizable(){
+        //verificar en AS400 si la fecha del xml es posterior a la que figura en la base datos
+        return true;
+    }
+    
+    public abstract void insertarEnBD();
 }
