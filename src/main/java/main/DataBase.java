@@ -1,5 +1,7 @@
 package main;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import static io.github.cdimascio.dotenv.DslKt.dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,13 +14,9 @@ public class DataBase {
     private static Connection conection = null;
     private static Statement stmt = null;
     private PreparedStatement pstmt = null;
-    private String 
-            sql,
-            jdbcUrl = "jdbc:postgresql://192.168.10.76:5432/AlmacenXML",
-            usuario = "postgres",
-            contrasena = "admin";
-    
-    
+    private Dotenv dotenv;
+    private String sql;
+
     public static DataBase getInstance(boolean isClient) {
         if (instance == null) {
             instance = new DataBase();
@@ -27,15 +25,16 @@ public class DataBase {
     }
 
     public void inicializar(String modo) throws SQLException, Exception {
+        dotenv = Dotenv.load();
         if ("server".equals(modo)) {
-            conection = DriverManager.getConnection(jdbcUrl, usuario, contrasena);
+            conection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
             stmt = conection.createStatement();
         } else {
-            jdbcUrl = "jdbc:postgresql://192.168.10.76:5432/AlmacenXML";
-            conection = DriverManager.getConnection(jdbcUrl, usuario, contrasena);
+
+            conection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
             stmt = conection.createStatement();
 
         }
     }
-    
+
 }
