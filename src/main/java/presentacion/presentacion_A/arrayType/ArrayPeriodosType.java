@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import presentacion_A.type.PeriodoType;
+import presentacion.presentacion_A.type.PeriodoType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ArrayPeriodosType {
@@ -28,4 +28,8 @@ public class ArrayPeriodosType {
         return sb.toString();
     }
 
+    public List<PeriodoType> getPeriodo() {
+        return periodo;
+    }
+    
 }

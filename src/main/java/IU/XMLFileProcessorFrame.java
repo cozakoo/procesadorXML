@@ -5,12 +5,14 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
+import main.DataBasePostGre;
 import static util.FileUtils.esSeccionA;
 import static util.FileUtils.esSeccionB;
 import util.Mensaje;
@@ -39,18 +41,25 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         nombreArchivo = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabelCantArchivos = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFocusCycleRoot(false);
         setLocationByPlatform(true);
 
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jButton1.setText("Actualizar declaracion");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 500, 250, -1));
 
+        jButtonOpenFile.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jButtonOpenFile.setText("Cargar Archivo");
         jButtonOpenFile.setToolTipText("");
         jButtonOpenFile.addActionListener(new java.awt.event.ActionListener() {
@@ -58,6 +67,7 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
                 jButtonOpenFileActionPerformed(evt);
             }
         });
+        jPanel1.add(jButtonOpenFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 69, 238, -1));
 
         jTextAreaOutput.setBackground(new java.awt.Color(51, 51, 51));
         jTextAreaOutput.setColumns(20);
@@ -67,65 +77,31 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
         jTextAreaOutput.setToolTipText("");
         jScrollPane1.setViewportView(jTextAreaOutput);
 
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 129, 659, 356));
+
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel1.setText("DGC - ACTUALIZACION DE DECLARACIONES");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 24, 388, 27));
 
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel2.setText("Nombre archivo:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 107, -1, -1));
+        jPanel1.add(nombreArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 107, 517, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(220, 220, 220)
-                .addComponent(jButtonOpenFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(221, 221, 221))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane1)
-                .addGap(10, 10, 10))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(220, 220, 220)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(184, 184, 184))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(158, 158, 158)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                .addGap(133, 133, 133))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonOpenFile)
-                .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(nombreArchivo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(17, 17, 17))
-        );
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        jLabel3.setText("Total archivos: ");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(518, 107, -1, 20));
+        jPanel1.add(jLabelCantArchivos, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 107, 80, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
 
         pack();
@@ -148,8 +124,35 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+    
+     private void addJtextArea(String text){
+        String espaciado = "\n";
+        jTextAreaOutput.setText(jTextAreaOutput.getText()+espaciado+text );
+    }
+    
+    private int recorrerArchivos(File carpeta, String extension) {
+        int count = 0;
+        File[] archivos = carpeta.listFiles();
 
-    private void selectAndProcessXMLFile() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if (archivos != null) {
+            for (File archivo : archivos) {
+                if (archivo.isFile()) {
+                   if (archivo.isFile() && archivo.getName().toLowerCase().endsWith(extension)) {
+                    count++;
+                    addJtextArea("Archivo: " + archivo.getAbsolutePath());
+                    System.out.println("Archivo: " + archivo.getAbsolutePath());
+                   }
+                } else if (archivo.isDirectory()) {
+                    System.out.println("Carpeta: " + archivo.getAbsolutePath());
+                    // Llamada recursiva para la carpeta encontrada
+                    count += recorrerArchivos(archivo, extension);
+                }
+            }
+        }
+        return count;
+    }
+
+    private void cargarOneElement() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
         fileChooser.setFileFilter(filter);
@@ -167,13 +170,47 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
                     this.nombreArchivo.requestFocusInWindow(); // Asegurarse de que el JTextArea tenga el foco
                     this.nombreArchivo.scrollRectToVisible(new Rectangle(0, 0, 1, 1)); // Desplazar al inicio
                 });
-                
+
             } catch (IllegalArgumentException ex) {
                 Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
                 Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
+
+    }
+
+    private void cargarManyElement() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
+        fileChooser.setFileFilter(filter);
+
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            // Obtener la carpeta seleccionada
+            File carpetaSeleccionada = fileChooser.getSelectedFile();
+            System.out.println("Carpeta seleccionada: " + carpetaSeleccionada.getAbsolutePath());
+
+            // Recorrer archivos dentro de la carpeta
+            int cantArchivos = recorrerArchivos(carpetaSeleccionada, ".xml");
+            
+            jLabelCantArchivos.setText(Integer.toString(cantArchivos));
+            System.out.println("total archivos encontrados: " + cantArchivos);
+        } else {
+            System.out.println("No se seleccionó ninguna carpeta.");
+        }
+    }
+   
+    
+   
+    private void selectAndProcessXMLFile() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        jLabelCantArchivos.setText("0");
+        //cargarManyElement();
+         cargarOneElement();
     }
 
     private <T extends XMLSeccion> void processSeccion(File selectedFile) throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -188,16 +225,29 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
         // Procesa según el tipo de sección
         if (XMLSeccionA.esNombreValido(nombre)) {
             XMLSeccionA xml = new XMLSeccionA(selectedFile);
-//        xml.validarPresentacion();
+            //xml.validarPresentacion();
             this.jTextAreaOutput.removeAll();
             this.jTextAreaOutput.setText(xml.toString());
+            this.nombreArchivo.setText(nombre);
             System.out.println(xml.toString());
-            // Puedes hacer algo con el objeto xml aquí si es necesario
-        } else if (XMLSeccionB.esNombreValido(nombre)) {
+            try {
+                if (xml.esPresentacionActualizable()) {
+                    xml.insertarEnBD(DataBasePostGre.getInstance(true));
+                    return;
+                }
+                // Puedes hacer algo con el objeto xml aquí si es necesario
+            } catch (SQLException ex) {
+                Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+        if (XMLSeccionB.esNombreValido(nombre)) {
             XMLSeccionB xml = new XMLSeccionB(selectedFile);
-            
-//        xml.validarPresentacion();
+
+            //        xml.validarPresentacion();
             this.jTextAreaOutput.setText(xml.toString());
+
         }
     }
 
@@ -234,6 +284,8 @@ public class XMLFileProcessorFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOpenFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelCantArchivos;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaOutput;

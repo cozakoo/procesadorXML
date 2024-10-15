@@ -1,7 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package main;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import static io.github.cdimascio.dotenv.DslKt.dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,36 +12,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DataBase {
+/**
+ *
+ * @author dgc06
+ */
+public abstract class DataBase {
 
-    private static DataBase instance;
-    private static Connection conection = null;
-    private static Statement stmt = null;
-    private PreparedStatement pstmt = null;
-    private Dotenv dotenv;
-    private String sql;
+    protected Connection connection;
+    protected Statement stmt = null;
+    protected PreparedStatement pstmt = null;
+    protected Dotenv dotenv;
+    protected String sql;
 
-    public static DataBase getInstance(boolean isClient) {
-        if (instance == null) {
-            instance = new DataBase();
-        }
-        return instance;
-    }
+    public abstract void inicializar(String modo) throws SQLException, Exception;
 
-    public void inicializar(String modo) throws SQLException, Exception {
-        dotenv = Dotenv.load();
-        if ("server".equals(modo)) {
-            conection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
-            stmt = conection.createStatement();
-        } else {
-
-            conection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
-            stmt = conection.createStatement();
-
-        }
-    }
-    
-      public ResultSet consulta(String query) {
+    public ResultSet consulta(String query) {
         try {
             this.sql = query;
             return stmt.executeQuery(query);
@@ -47,11 +35,17 @@ public class DataBase {
         }
         return null;
     }
-      
-    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
-        return conection.prepareStatement(sql);
-    }
-    
-    
 
+    public Connection getConection() {
+        return connection;
+
+    }
+
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        return connection.prepareStatement(sql);
+    }
+     
+    public Statement creatStatement() throws SQLException{
+        return connection.createStatement();
+    }
 }

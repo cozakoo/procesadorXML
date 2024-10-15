@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class ConceptoType {
 
     @XmlAttribute(name = "tipo")
-    private String tipo;
+    private int tipo;
 
     @XmlElement(name = "tipoDoc")
     private String tipoDoc;
@@ -37,7 +37,7 @@ public class ConceptoType {
     @XmlElement(name = "detalles")
     private ArrayDetallesType detalles;
 
-    public String getTipo() {
+    public int getTipo() {
         return tipo;
     }
 

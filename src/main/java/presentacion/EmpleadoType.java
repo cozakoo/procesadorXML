@@ -7,13 +7,13 @@ import util.Persona;
 public class EmpleadoType extends Persona {
 
     @XmlElement(name = "cuit")
-    private long cuit;
+    private String cuit;
 
     @XmlElement(name = "direccion")
     private DireccionType direccion;
 
     // Getters y setters
-    public long getCuit() {
+    public String getCuit() {
         return cuit;
     }
 

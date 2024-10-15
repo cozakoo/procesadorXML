@@ -1,9 +1,11 @@
 package xml;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
+import main.DataBase;
 
 public abstract class XMLSeccion {
 
@@ -43,16 +45,11 @@ public abstract class XMLSeccion {
     public String getPeriodo() {
         return periodo;
     }
-
     
-    public void validarPresentacion() throws JAXBException {
-
-    }
-    
-    public static boolean EsDclaracionActualizable(){
+    public abstract boolean esPresentacionActualizable() throws SQLException;
         //verificar en AS400 si la fecha del xml es posterior a la que figura en la base datos
-        return true;
-    }
+     
     
-    public abstract void insertarEnBD();
+    
+    public abstract void insertarEnBD(DataBase db);
 }

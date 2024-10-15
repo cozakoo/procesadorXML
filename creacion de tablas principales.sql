@@ -1,3 +1,40 @@
+--crear tabla fliares
+CREATE TABLE fliares (
+    documento NUMERIC,
+    codfam INTEGER,
+    docfam NUMERIC,
+    nya VARCHAR(255),
+    fechaalta DATE,
+    fechabaja DATE,
+    ok INTEGER,
+    sistema INTEGER,
+    web INTEGER,
+    vigproxper INTEGER,
+    desde INTEGER,
+    Hasta INTEGER,
+    fechanac DATE,
+    porcen INTEGER
+
+);
+
+--crear tabla cdedadmite
+CREATE TABLE cdedadmite(
+    concepto VARCHAR(250),
+    descrip VARCHAR(250),
+    codded INTEGER,
+    topefijo (250),
+    porcentajegn,
+    porcentaje,
+    grupognpa,
+    anual,
+    gni,
+    gni40
+)
+
+
+
+
+
 -- -- Crear la tabla provincia
 -- CREATE TABLE provincia (
 --     codigo INTEGER PRIMARY KEY,
@@ -47,19 +84,21 @@ INSERT INTO tipo_documento (codigo, descripcion) VALUES
 (90, 'LE'),
 (92, 'En Trámite');
 
--- Crear la tabla parentesco
--- CREATE TABLE parentesco (
---     codigo INTEGER PRIMARY KEY,
---     descripcion VARCHAR(255)
--- );
+Crear la tabla parentesco
+CREATE TABLE parentesco (
+    codigo INTEGER PRIMARY KEY,
+    descripcion VARCHAR(255),
+    codfam INTEGER ,
+    periodo INTEGER
+);
 
 -- -- Insertar los datos
-INSERT INTO parentesco (codigo, descripcion) VALUES
-(1, 'Cónyuge'),
-(3, 'Hijo/a Menor de 24 Años'),
-(30, 'Hijastro/a Menor de 24 Años'),
-(31, 'Hijo/a Incapacitado para el Trabajo'),
-(32, 'Hijastro/a incapacitado para el Trabajo'),
+INSERT INTO parentesco (codigo, descripcion, codfam, periodo) VALUES
+(1, 'Cónyuge', 4,2019),
+(3, 'Hijo/a Menor de 18 Años',1,2019),
+(30, 'Hijastro/a Menor de 18 Años',1,2019),
+(31, 'Hijo/a Incapacitado para el Trabajo',2,2019),
+(32, 'Hijastro/a incapacitado para el Trabajo',2,2019),
 -- (33, 'Padre'),
 -- (34, 'Madre'),
 -- (35, 'Nieto/a Menor de 24 Años'),
@@ -74,8 +113,8 @@ INSERT INTO parentesco (codigo, descripcion) VALUES
 -- (44, 'Suegro/a'),
 -- (45, 'Yerno/Nuera Menor de 24 Años'),
 -- (46, 'Yerno/Nuera Incapacitado para el Trabajo'),
-(51, 'CONVIV'),
-(103, 'Hijo/a Mayor de 18 y Hasta 24 años');
+(51, 'CONVIV',4,2019),
+(103, 'Hijo/a Mayor de 19 y Hasta 24 años',5,2022);
 
 
 -- Crear la tabla deducciones

@@ -36,4 +36,10 @@ public class ArrayCargasFamiliaType {
 
         return sb.toString();
     }
+
+    public List<CargaFamilia> getCargasFamilia() {
+        return cargasFamilia;
+    }
+    
+    
 }

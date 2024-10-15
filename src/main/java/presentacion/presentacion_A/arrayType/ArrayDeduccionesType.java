@@ -45,4 +45,8 @@ public class ArrayDeduccionesType {
         return sb.toString();
     }
 
+    public List<ConceptoType> getDeduccion() {
+        return deduccion;
+    }
+    
 }

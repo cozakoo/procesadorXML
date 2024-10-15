@@ -24,4 +24,9 @@ public class ArrayDetallesType {
         return sb.toString();
     }
 
+    public List<DetalleType> getDetalle() {
+        return detalle;
+    }
+    
+    
 }

@@ -1,6 +1,7 @@
 package xml;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.JAXBContext;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import main.DataBase;
 import presentacion.presentacion_B.presentacionTypeSeccionB;
 
 @XmlRootElement(name = "presentacion")
@@ -45,17 +47,18 @@ public class XMLSeccionB extends XMLSeccion {
 
     }
 
+
     @Override
-    public void validarPresentacion() throws JAXBException {
-        // Validation logic for Seccion B
-        this.presentacion.validar(getPeriodo());
+    public boolean esPresentacionActualizable() throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void insertarEnBD() {
+    public void insertarEnBD(DataBase db) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
+  
  
 
 }

@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws UnsupportedLookAndFeelException, Exception {
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
-        DataBase db = DataBase.getInstance(true);
+        DataBasePostGre db = DataBasePostGre.getInstance(true);
         db.inicializar("cliente");
 
         java.awt.EventQueue.invokeLater(() -> {

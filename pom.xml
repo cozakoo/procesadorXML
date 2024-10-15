@@ -23,6 +23,13 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.24</version> <!-- Asegúrate de usar la versión más reciente -->
         </dependency>
+        
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.8.0</version> <!-- O la versión más reciente -->
+        </dependency>
+
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
@@ -39,6 +46,13 @@
             <artifactId>java-dotenv</artifactId>
             <version>5.2.2</version>
         </dependency>
+        <!-- confi dependi as400-->
+        <dependency>
+            <groupId>net.sf.jt400</groupId>
+            <artifactId>jt400</artifactId>
+            <version>20.0.7</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

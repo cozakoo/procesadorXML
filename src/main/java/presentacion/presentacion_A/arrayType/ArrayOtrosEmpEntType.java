@@ -14,6 +14,11 @@ public class ArrayOtrosEmpEntType {
     @XmlElement(name = "empEnt")
     private List<EmpleadorEntidadType> empEnt = new ArrayList<>();
 
+    public List<EmpleadorEntidadType> getEmpleadores() {
+        return empEnt;
+    }
+
+    
     @Override
     public String toString() {
 

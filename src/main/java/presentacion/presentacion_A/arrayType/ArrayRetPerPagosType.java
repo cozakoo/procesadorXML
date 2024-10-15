@@ -11,16 +11,19 @@ import presentacion.presentacion_A.type.ConceptoType;
 public class ArrayRetPerPagosType {
 
     @XmlElement(name = "retPerPago")
-    private List<ConceptoType> deduccion = new ArrayList<>();
+    private List<ConceptoType> retenciones = new ArrayList<>();
 
-    public List<ConceptoType> getDeduccion() {
-        return deduccion;
+    public List<ConceptoType> getRetenciones() {
+        return retenciones;
     }
 
+
+    
+    
     @Override
     public String toString() {
         StringBuilder sb =  new StringBuilder();
-        for (ConceptoType detalle : deduccion) {
+        for (ConceptoType detalle : retenciones) {
             sb.append(detalle.toString());
         }
         return sb.toString();
