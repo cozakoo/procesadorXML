@@ -102,14 +102,15 @@ public class XMLSeccionA extends XMLSeccion {
     }
 
     private void insertGanLiqOTrosEmpEnt(List<EmpleadorEntidadType> empleadores, DataBase db) throws SQLException {
-         String sql = IConsultaSql.consulta_ganliqOtrosEmpl_insert;
-         PreparedStatement pstmt =  db.getPreparedStatement(sql);
-         for (EmpleadorEntidadType empleador : empleadores) {
-             int codEmp = 1234;
-             List<ingresoAporteType> ingApList = empleador.getIngresosAportes().getIngAp();
-             for (ingresoAporteType ingAp : ingApList) {
-                 armarCuerpoGanLiqOTrosEmpEnt(codEmp,ingAp,pstmt);
-             }
+        String sql = IConsultaSql.consulta_ganliqOtrosEmpl_insert;
+        PreparedStatement pstmt = db.getPreparedStatement(sql);
+        for (EmpleadorEntidadType empleador : empleadores) {
+            int codEmp = util.XmlUtils.obtenerCodEmpresa(empleador.getCuit(), db);
+            List<ingresoAporteType> ingApList = empleador.getIngresosAportes().getIngAp();
+            for (ingresoAporteType ingAp : ingApList) {
+                armarCuerpoGanLiqOTrosEmpEnt(codEmp, ingAp, pstmt);
+            }
+            pstmt.executeBatch();
         }
     }
 
@@ -122,26 +123,23 @@ public class XMLSeccionA extends XMLSeccion {
 
         try {
             conexion.setAutoCommit(false);
-            //  limpiarDatosAnteriores(this.getDniPresentacion(), db);
-//            if (ExisteEtiqueta(this.presentacion.getCargasFamilia())) {
-//                insertCargFamilia(this.presentacion.getCargasFamilia().getCargasFamilia(), db);
-//            }
+            limpiarDatosAnteriores(this.getDniPresentacion(), db);
+            if (ExisteEtiqueta(this.presentacion.getCargasFamilia())) {
+                insertCargFamilia(this.presentacion.getCargasFamilia().getCargasFamilia(), db);
+            }
             if (ExisteEtiqueta(this.presentacion.getGanLiqOtrosEmpEnt())) {
                 insertGanLiqOTrosEmpEnt(this.presentacion.getGanLiqOtrosEmpEnt().getEmpleadores(), db);
             }
-//            if (ExisteEtiqueta(this.presentacion.getDeducciones())) {
-//                insertDeducciones(this.presentacion.getDeducciones().getDeduccion(), db);
-//            }
-//            if(ExisteEtiqueta(this.presentacion.getGanLiqOtrosEmpEnt())){
-//                insertLiquidacionOtrEmpl(this.presentacion.getGanLiqOtrosEmpEnt().getEmpleadores(), db);
-//            }
-//            if (ExisteEtiqueta(this.presentacion.getRetPerPagos())) {
-//                insertRetPerPagos(this.presentacion.getRetPerPagos().getRetenciones(), db);
-//            }
+            if (ExisteEtiqueta(this.presentacion.getDeducciones())) {
+                insertDeducciones(this.presentacion.getDeducciones().getDeduccion(), db);
+            }
+            if (ExisteEtiqueta(this.presentacion.getRetPerPagos())) {
+                insertRetPerPagos(this.presentacion.getRetPerPagos().getRetenciones(), db);
+            }
 
             conexion.commit();
             System.out.println("SE COMPLETO LA TRANSACCION EXITOSAMENTE");
-            
+
         } catch (SQLException e) {
             try {
                 // Hacer rollback si hay un error
@@ -156,13 +154,6 @@ public class XMLSeccionA extends XMLSeccion {
         //FIN TRANSACCION
     }
 
-//        if (ExisteEtiqueta(this.presentacion.getDeducciones())) {
-//
-//            for (ConceptoType object : this.presentacion.getDeducciones().getDeduccion()) {
-//                System.out.println("deduccion");
-//                System.out.println(object.getDenominacion());
-//            }
-//        }
     // Lógica para determinar si es Sección B
     //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     private void armarCuerpoInsertDeduccion(PreparedStatement pstmt, ConceptoType deduccion, String concepto, int mes, double monto) throws SQLException {
@@ -272,26 +263,18 @@ public class XMLSeccionA extends XMLSeccion {
 
     }
 
-    private void insertLiquidacionOtrEmpl(List<EmpleadorEntidadType> empleadores, DataBase db) {
-
-        for (EmpleadorEntidadType empleador : empleadores) {
-
-        }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     private void armarCuerpoRetenPerPagos(PreparedStatement pstmt, String concepto, int mes, double montoMensual) throws SQLException {
-          pstmt.setBigDecimal(1, this.getDniPresentacion());
-          pstmt.setString(2, concepto);
-          pstmt.setDouble(3, montoMensual);
-          int mesActual = XmlUtils.obtenerMesActual();
-          pstmt.setInt(4, mesActual);
-          pstmt.setNull(5, java.sql.Types.INTEGER);
-          //cod empresa -> parametro 6
-          pstmt.setInt(6, 1111);
-          pstmt.setInt(7, mes);
-          pstmt.setString(8, "");
-          pstmt.addBatch();
+        pstmt.setBigDecimal(1, this.getDniPresentacion());
+        pstmt.setString(2, concepto);
+        pstmt.setDouble(3, montoMensual);
+        int mesActual = XmlUtils.obtenerMesActual();
+        pstmt.setInt(4, mesActual);
+        pstmt.setNull(5, java.sql.Types.INTEGER);
+        //cod empresa -> parametro 6
+        pstmt.setInt(6, 1111);
+        pstmt.setInt(7, mes);
+        pstmt.setString(8, "");
+        pstmt.addBatch();
     }
 
     private void insertRetPerPagos(List<ConceptoType> retenciones, DataBase db) throws SQLException {
@@ -317,16 +300,39 @@ public class XMLSeccionA extends XMLSeccion {
         }
         pstmt.executeBatch();
     }
-    
-    private double obtenerGanNeta(ingresoAporteType ingAp){
-        
-        return ingAp.getGanBrut() - (ingAp.getObraSoc());
+
+    private double obtenerGanNeta(ingresoAporteType ingAp) {
+
+        return ((ingAp.getGanBrut()
+                + ingAp.getSac()
+                + ingAp.getRetriNoHab()
+                + ingAp.getAjuste()
+                + ingAp.getHorasExtEx()
+                + ingAp.getHorasExtGr()
+                + ingAp.getMatDid()
+                + ingAp.getGastosMovViat()
+                + ingAp.getMovilidad()
+                + ingAp.getViaticos()
+                + ingAp.getOtrosConAn()
+                + ingAp.getBonosProd()
+                + ingAp.getFallosCaja()
+                + ingAp.getConSimNat())
+                - (ingAp.getObraSoc() + ingAp.getSegSoc() + ingAp.getSind()));
+
+        /*exentos
+          + ingAp.getExeNoAlc()
+           ingAp.getTeletrabajoExento()
+         + ingAp.getExeNoAlc()
+        + ingAp.getRemunExentaLey27549())
+        + ingAp.getSuplemParticLey19101()
+         */
     }
+
     private void armarCuerpoGanLiqOTrosEmpEnt(int codEmp, ingresoAporteType ingAp, PreparedStatement pstmt) throws SQLException {
         pstmt.setBigDecimal(1, this.getDniPresentacion());
         pstmt.setInt(2, codEmp);
         pstmt.setInt(3, XmlUtils.obtenerMesActual());
-        pstmt.setDouble(4,obtenerGanNeta(ingAp));
+        pstmt.setDouble(4, obtenerGanNeta(ingAp));
         pstmt.setDouble(5, ingAp.getGanBrut());
         pstmt.setDouble(6, ingAp.getObraSoc());
         pstmt.setDouble(7, ingAp.getSegSoc());
@@ -340,24 +346,23 @@ public class XMLSeccionA extends XMLSeccion {
         pstmt.setDouble(15, ingAp.getHorasExtGr());
         pstmt.setDouble(16, ingAp.getHorasExtEx());
         pstmt.setDouble(17, ingAp.getMatDid());
-        //pstmt.setDouble(18,movviat);
-        //pstmt.setDouble(19, bonofalla);
-        //pstmt.setDouble(20, exencovid);
-        //pstmt.setDouble(21, exencomilit);
+        //gastosMovViat se dividio en 2 conseptos por lo tanto se setea en 0
+        pstmt.setDouble(18, 0);
+        //bonoFalla
+        pstmt.setDouble(19, 0);
+        //exenct covid 
+        pstmt.setDouble(20, ingAp.getRemunExentaLey27549());
+        //exentro trabajadores militares
+        pstmt.setDouble(21, ingAp.getSuplemParticLey19101());
         pstmt.setDouble(22, ingAp.getTeletrabajoExento());
-        pstmt.setString(23, ingAp.getRegimen() );
+        pstmt.setString(23, ingAp.getRegimen());
         pstmt.setDouble(24, ingAp.getBonosProd());
         pstmt.setDouble(25, ingAp.getFallosCaja());
         pstmt.setDouble(26, ingAp.getViaticos());
         pstmt.setDouble(27, ingAp.getMovilidad());
-      //pstmt.setDouble(27, ingAp.get);
-        
-                
-        
-        
-        
-        
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        pstmt.setDouble(28, ingAp.getConSimNat());
+
+        pstmt.addBatch();
     }
-    
+
 }

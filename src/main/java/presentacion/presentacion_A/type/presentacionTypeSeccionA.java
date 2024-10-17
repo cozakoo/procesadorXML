@@ -1,7 +1,7 @@
 package presentacion.presentacion_A.type;
 
 import presentacion_A.arrayType.ArrayRetPerPagosType;
-import presentacion_A.arrayType.ArrayOtrosEmpEntType;
+import presentacion.presentacion_A.arrayType.ArrayOtrosEmpEntType;
 import presentacion.presentacion_A.arrayType.ArrayDatosAdicionalesType;
 import presentacion.presentacion_A.arrayType.ArrayCargasFamiliaType;
 import presentacion_A.arrayType.ArrayAjustesType;

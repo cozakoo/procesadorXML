@@ -55,6 +55,7 @@ public class XMLSeccionB extends XMLSeccion {
 
     @Override
     public void insertarEnBD(DataBase db) {
+        
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

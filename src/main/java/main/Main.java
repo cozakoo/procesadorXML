@@ -1,7 +1,9 @@
 package main;
 
+import IU.NewJFrame;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import IU.XMLFileProcessorFrame;
+import com.sun.media.jfxmedia.events.NewFrameEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

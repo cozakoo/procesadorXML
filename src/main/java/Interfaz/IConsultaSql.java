@@ -1,6 +1,9 @@
 package Interfaz;
 
 public interface IConsultaSql {
+
+    public static String consulta_cod_empresa = "select codemp from empresas " +
+                                                "where cuit = ";
    
     String consujlta_agente_delete = "delete from agentes where documento = ";
     String consulta_familiares_delete = "delete from fliares where documento = ";

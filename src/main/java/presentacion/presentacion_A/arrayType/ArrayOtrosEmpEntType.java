@@ -1,4 +1,4 @@
-package presentacion_A.arrayType;
+package presentacion.presentacion_A.arrayType;
 
 import java.util.ArrayList;
 import java.util.List;

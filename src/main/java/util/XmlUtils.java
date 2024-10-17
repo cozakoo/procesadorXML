@@ -36,6 +36,38 @@ public class XmlUtils {
         return Date.valueOf(localDate);
     }
 
+    private static String obtenerCuitConGuion(String cuit) {
+        if (cuit.length() != 11) {
+            throw new IllegalArgumentException("El CUIT debe tener 11 dígitos.");
+        }
+
+        // Formatear el CUIT agregando los guiones
+        return cuit.substring(0, 2) + "-"
+                + cuit.substring(2, 10) + "-"
+                + cuit.substring(10, 11);
+
+    }
+
+    public static int obtenerCodEmpresa(String cuit, DataBase db) {
+
+        String sql = IConsultaSql.consulta_cod_empresa + "'" + obtenerCuitConGuion(cuit) + "'";
+        ResultSet rs = db.consulta(sql);
+        try {
+            if (rs.next()) {
+                int codEmp = rs.getInt("codemp");
+                System.out.println("codEmp es: " + codEmp);
+                return codEmp;
+            } else {
+                System.out.println("No se encontró codEmp con el cuil: " + cuit);
+            }
+        } catch (SQLException ex) {
+            System.out.println("no pude recuperar cod consulta");
+            //Logger.getLogger(XmlUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return 1;
+    }
+
     public static ResultSet obtenerUltimaPresentacionVigente(BigDecimal nroDocumento) {
         String query = IConsultaSql.consulta_utlima_preentacion + nroDocumento;
         return DataBasePostGre.getInstance(true).consulta(query);
