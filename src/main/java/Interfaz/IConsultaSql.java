@@ -2,35 +2,43 @@ package Interfaz;
 
 public interface IConsultaSql {
 
-    public static String consulta_cod_empresa = "select codemp from empresas " +
-                                                "where cuit = ";
-   
-    String consujlta_agente_delete = "delete from agentes where documento = ";
+    public static String consulta_cod_empresa = "select codemp from empresas "
+            + "where cuit = ";
+    public static String consulta_agente_insert = "INSERT INTO agentes (documento, nya, empliq, sexo, cuil, f572, fechaf572, observ, fechapres, nropres, famok, excep, web, fechaweb, wcuit, wtipodoc, wapellido, wnombre, wdireccion, wprovincia, wcp, wlocalidad, wcalle, wnro, wpiso, wdpto, wcuitreten, wdescreten, periodo, revisado, maxejermes, cierre, minejermes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    
+    
+    
+    String consulta_esLiqPorMinstEconomia = "select * from empresas\n"
+            + "where codemp < 1020 AND activo = 1  and cuit "
+            + "IS NOT NULL and cuit = ? ";
+           
+
+    //String consujlta_agente_delete = "delete from agentes where documento = ";
     String consulta_familiares_delete = "delete from fliares where documento = ";
-    String consulta_deduccion_delete =  "delete from deduccion where documento = ";
-    
-    
+    String consulta_deduccion_delete = "delete from deduccion where documento = ";
+    String consulta_ganLiqOtrosEmpl_delete = "delete from otrasremu where documento = ";
+    String consulta_retPerPagos_delete = "delete from ajusteimp where documento = ";
+
     String consulta_ganliqOtrosEmpl_insert = "INSERT INTO otrasremu (documento, codemp, mes, gneta, bruto, obrasoc, jubil, sind, nohabit, ajuste, retgan, mesorigen, sac, exenoalc, horasextgr, horasextex, matdid, movviat, bonofalla, exencovid, exenmilit, exentelet, regimen, bonoprod, fallocaja, viaticos, movilidad, simil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    
-     String consulta_retperPagos_insert = "INSERT INTO ajusteimp (documento, concepto, monto, mes,"
+
+    String consulta_retperPagos_insert = "INSERT INTO ajusteimp (documento, concepto, monto, mes,"
             + " nroliq, codemp, mesorigen, descadicional) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    
-    
-    String consulta_utlima_preentacion = "select periodo, nropres, excep from agentes " +
-                                         "where documento = ";
-    
+
+    String consulta_utlima_preentacion = "select periodo, nropres, excep from agentes "
+            + "where documento = ";
+
     String consulta_recuperacion_concepto_deuccion = "select concepto from cdedadmite where codded = ";
 
     String consulta_deduccion_insert = "INSERT INTO deduccion (documento, periodo, nropres, web,"
             + " concepto, monto, mes, wcuit, wdesc, fecha, admitido, tipogasto, docfliar, nyafliar,"
             + " codfliar, porcfliar)"
             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
- 
+
     String consulta_familiar_insert
             = "INSERT INTO fliares"
             + "(documento, "
             + "codfam,"
-            +"docfam,"
+            + "docfam,"
             + "nya,"
             + "fechaalta,"
             + "fechabaja,"
@@ -40,8 +48,8 @@ public interface IConsultaSql {
             + "vigproxper,"
             + "desde,"
             + "hasta,"
-            +"fechanac,"
-            +"porcen)"
+            + "fechanac,"
+            + "porcen)"
             + "VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?)";
 }
 //    String consulta_mutual_modificar

@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class AgentesRetencionType {
+public class AgentesRetencionType {
 
     @XmlElement(name = "cuit")
     private String cuit;
@@ -23,4 +23,13 @@ class AgentesRetencionType {
 
     }
 
+    public String getCuit() {
+        return cuit;
+    }
+
+    public String getDenominacion() {
+        return denominacion;
+    }
+     
+  
 }

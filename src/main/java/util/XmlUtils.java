@@ -7,14 +7,19 @@ package util;
 import Interfaz.IConsultaSql;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.sql.Date;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.DataBase;
 import main.DataBasePostGre;
+import org.postgresql.translation.messages_bg;
 
 /**
  *
@@ -36,7 +41,7 @@ public class XmlUtils {
         return Date.valueOf(localDate);
     }
 
-    private static String obtenerCuitConGuion(String cuit) {
+    public static String obtenerCuitConGuion(String cuit) {
         if (cuit.length() != 11) {
             throw new IllegalArgumentException("El CUIT debe tener 11 dígitos.");
         }
@@ -48,11 +53,11 @@ public class XmlUtils {
 
     }
 
-    public static int obtenerCodEmpresa(String cuit, DataBase db) {
+    public static int obtenerCodEmpresa(String cuit, DataBase db) throws SQLException {
 
         String sql = IConsultaSql.consulta_cod_empresa + "'" + obtenerCuitConGuion(cuit) + "'";
         ResultSet rs = db.consulta(sql);
-        try {
+       
             if (rs.next()) {
                 int codEmp = rs.getInt("codemp");
                 System.out.println("codEmp es: " + codEmp);
@@ -60,37 +65,33 @@ public class XmlUtils {
             } else {
                 System.out.println("No se encontró codEmp con el cuil: " + cuit);
             }
-        } catch (SQLException ex) {
-            System.out.println("no pude recuperar cod consulta");
-            //Logger.getLogger(XmlUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
         return 1;
     }
-
+    public static boolean esPresentCargadaPosteriorPresentVigente(int periodoPresentVigente , int nroPresVigente, int periodoPresentCargada,int nroPresCargada ){
+        return (periodoPresentCargada == periodoPresentVigente && nroPresCargada >= nroPresVigente);
+    }
+    
     public static ResultSet obtenerUltimaPresentacionVigente(BigDecimal nroDocumento) {
         String query = IConsultaSql.consulta_utlima_preentacion + nroDocumento;
         return DataBasePostGre.getInstance(true).consulta(query);
 
     }
 
-    public static String obtenerConceptoDeduccAdmitida(int code, DataBase db) {
+    public static String obtenerConceptoDeduccAdmitida(int code, DataBase db) throws SQLException, Exception {
         String sql = IConsultaSql.consulta_recuperacion_concepto_deuccion + code;
         ResultSet rs = db.consulta(sql);
-        try {
+    
             if (rs.next()) {
                 String concepto = rs.getString("concepto");
                 System.out.println("concepto es: " + concepto);
                 return concepto;
             } else {
                 System.out.println("No se encontró ningún cliente con el DNI proporcionado.");
+                throw new Exception("No se pudo obtner concepto de la deducion con el codigo: ."+code);
             }
-        } catch (SQLException ex) {
-            System.out.println("no pude recuperar cod consulta");
-            //Logger.getLogger(XmlUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return "vacio";
+      
     }
 
     public static Date obtenerFechaActual() {
@@ -109,25 +110,33 @@ public class XmlUtils {
         return cuit.substring(2, 10);
     }
 
-    public static int obtenerCodParentesto(int cod) {
+    public static int obtenerCodParentesto(int cod) throws SQLException, Exception {
         String contarRegistrosSQL = "SELECT codfam FROM \"TablasDelSistema\".parentesco WHERE codigo = " + cod;
         ResultSet rs = DataBasePostGre.getInstance(true).consulta(contarRegistrosSQL);
-        try {
+     
             if (rs.next()) {
                 int codfam = rs.getInt("codfam");
                 System.out.println("codParentesto es: " + codfam);
                 return codfam;
             } else {
                 System.out.println("No se encontró ningún cliente con el DNI proporcionado.");
+                throw new Exception("No se pudo obtener el Codigo de parententesco");
             }
-        } catch (SQLException ex) {
-            System.out.println("no pude recuperar cod consulta");
-            //Logger.getLogger(XmlUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;
+      
+  
     }
 
     public static int obtenerMesActual() {
         return LocalDate.now().getMonthValue();
+    }
+
+    public static  java.sql.Date convertirAStringToFecha(String fecha) throws ParseException {
+
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date fechaUtil = formato.parse(fecha);
+        java.sql.Date fechaSQL = new java.sql.Date(fechaUtil.getTime());
+        // Convertir String a Date
+        return fechaSQL;
+
     }
 }

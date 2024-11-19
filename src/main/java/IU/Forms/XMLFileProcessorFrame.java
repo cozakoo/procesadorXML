@@ -1,4 +1,4 @@
-package IU;
+package IU.Forms;
 
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -23,15 +25,22 @@ import xml.XMLSeccion;
 import xml.XMLSeccionA;
 import xml.XMLSeccionB;
 import javax.swing.JFrame;
+import main.ConfigDB;
+import main.DataBase;
 import util.DetalleNota;
 import util.NotaList;
 
 public class XMLFileProcessorFrame extends JFrame {
 
+    private ResultadoProcesoXmlForm resultadosForm;
+    private int anioDeTrabajo = 0;
+
     public XMLFileProcessorFrame() {
         initComponents();
         setLocationRelativeTo(null); // Centra la ventana
         setResizable(false); // No permite redimensionar la ventana
+        anioDeTrabajo = ConfigDB.getInstance().getAnio();
+        anioDeclaracionesJlabel.setText("AÑO: " + anioDeTrabajo);
 //        setExtendedState(JFrame.MAXIMIZED_BOTH); // Permite maximizar la ventana
     }
 
@@ -40,16 +49,16 @@ public class XMLFileProcessorFrame extends JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        viewResultButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         tipoArchivoLabel = new javax.swing.JLabel();
         rutaArchivoLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        SelectedFileBotton = new javax.swing.JLabel();
         jLabelCantArchivos = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        SelectedFolderButton = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         anioDeclaracionesJlabel = new javax.swing.JLabel();
 
@@ -58,14 +67,16 @@ public class XMLFileProcessorFrame extends JFrame {
         setLocationByPlatform(true);
         setMaximizedBounds(new java.awt.Rectangle(0, 0, 0, 0));
 
-        jButton1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        jButton1.setText("Actualizar declaracion");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        viewResultButton.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        viewResultButton.setText("Actualizar declaracion");
+        viewResultButton.setEnabled(false);
+        viewResultButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                viewResultButtonActionPerformed(evt);
             }
         });
 
+        jTextAreaOutput.setEditable(false);
         jTextAreaOutput.setBackground(new java.awt.Color(51, 51, 51));
         jTextAreaOutput.setColumns(20);
         jTextAreaOutput.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
@@ -78,7 +89,7 @@ public class XMLFileProcessorFrame extends JFrame {
         jLabel1.setBackground(new java.awt.Color(51, 51, 51));
         jLabel1.setFont(new java.awt.Font("Roboto Medium", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 153, 255));
-        jLabel1.setText("DGC - ACTUALIZACION DE DECLARACIONES");
+        jLabel1.setText("IMPORTACION DE DECLARACIONES - XML");
 
         tipoArchivoLabel.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tipoArchivoLabel.setText("ffffffffff");
@@ -88,23 +99,20 @@ public class XMLFileProcessorFrame extends JFrame {
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel3.setText("Total archivos: ");
 
-        jLabel5.setIcon(new javax.swing.ImageIcon("C:\\Users\\dgc06\\Documents\\Proyectos Java Netbeans\\procesadorXML\\src\\main\\java\\images\\importar.png")); // NOI18N
-        jLabel5.setText("cargar archivo");
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+        SelectedFileBotton.setText("cargar archivo");
+        SelectedFileBotton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel5MousePressed(evt);
+                SelectedFileBottonMousePressed(evt);
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\dgc06\\Documents\\Proyectos Java Netbeans\\procesadorXML\\src\\main\\java\\images\\importar.png")); // NOI18N
-        jLabel6.setText("cargar carpeta");
-        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+        SelectedFolderButton.setText("cargar carpeta");
+        SelectedFolderButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel6MousePressed(evt);
+                SelectedFolderButtonMousePressed(evt);
             }
         });
 
-        jLabel7.setIcon(new javax.swing.ImageIcon("C:\\Users\\dgc06\\Documents\\Proyectos Java Netbeans\\procesadorXML\\src\\main\\java\\images\\setting.png")); // NOI18N
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jLabel7MousePressed(evt);
@@ -128,9 +136,9 @@ public class XMLFileProcessorFrame extends JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jButton1)))
+                            .addComponent(SelectedFileBotton)
+                            .addComponent(SelectedFolderButton)
+                            .addComponent(viewResultButton)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(530, 530, 530)
                         .addComponent(jLabel3)
@@ -164,11 +172,11 @@ public class XMLFileProcessorFrame extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
-                        .addComponent(jLabel5)
+                        .addComponent(SelectedFileBotton)
                         .addGap(40, 40, 40)
-                        .addComponent(jLabel6)
+                        .addComponent(SelectedFolderButton)
                         .addGap(50, 50, 50)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(viewResultButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -195,37 +203,78 @@ public class XMLFileProcessorFrame extends JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addJtextArea(String text) {
+        String espaciado = "\n";
+        jTextAreaOutput.setText(jTextAreaOutput.getText() + espaciado + text);
+        jTextAreaOutput.setCaretPosition(jTextAreaOutput.getDocument().getLength());
+    }
+
+
+    private void viewResultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewResultButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        if (viewResultButton.isEnabled()) {
+            if (resultadosForm != null) {
+                resultadosForm.setVisible(true);
+                return;
+            }
+
+            resultadosForm = new ResultadoProcesoXmlForm(NotaList.getIntance());
+            resultadosForm.setVisible(true);
+        }
+    }//GEN-LAST:event_viewResultButtonActionPerformed
 
     private void jLabel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MousePressed
         // TODO add your handling code here:
-          new SettingFrame(this).setVisible(true);
-       // this.setOpacity(10);
+        new SettingFrame(this).setVisible(true);
+        // this.setOpacity(10);
         this.setEnabled(false);
+
     }//GEN-LAST:event_jLabel7MousePressed
 
-    private void jLabel5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MousePressed
-        try {
-            // TODO add your handling code here:
-            cargarOneElement();
-        } catch (JAXBException ex) {
-            Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+    private File obtenerFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
+        fileChooser.setFileFilter(filter);
+
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
         }
-    }//GEN-LAST:event_jLabel5MousePressed
 
-    private void jLabel6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MousePressed
+        return null;
+    }
+
+    private void cleanTextAreaOpt() {
+        jTextAreaOutput.setText("");
+    }
+
+    private void inicializarAjustesDeCarga(String nameArchivo) {
+        cleanTextAreaOpt();
+        addJtextArea(nameArchivo);
+        viewResultButton.setEnabled(false);
+        setEnableBotonesCarga(false);
+    }
+
+    private void inicializarFormResultados() {
+        resultadosForm = new ResultadoProcesoXmlForm(NotaList.getIntance());
+        viewResultButton.setEnabled(true);
+        setEnableBotonesCarga(true);
+    }
+    private void SelectedFileBottonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SelectedFileBottonMousePressed
+
+        if (!SelectedFileBotton.isEnabled()) {
+            return;
+        }
         try {
             // TODO add your handling code here:
+            File archivo = obtenerFile();
+            if (archivo != null) {
+                inicializarAjustesDeCarga(archivo.getName());
+                cargarOneElement(archivo);
+                inicializarFormResultados();
 
-            cargarManyElement();
+            }
         } catch (JAXBException ex) {
             Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchMethodException ex) {
@@ -239,18 +288,67 @@ public class XMLFileProcessorFrame extends JFrame {
         } catch (InvocationTargetException ex) {
             Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jLabel6MousePressed
-    
-     private void addJtextArea(String text){
-        String espaciado = "\n";
-        jTextAreaOutput.setText(jTextAreaOutput.getText()+espaciado+text );
+    }//GEN-LAST:event_SelectedFileBottonMousePressed
+
+    private File obtenerCarpeta() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
+        fileChooser.setFileFilter(filter);
+
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
+        }
+
+        return null;
     }
-    
-    public void setAnioPresentacion(String anio){
+
+    void setEnableBotonesCarga(boolean state) {
+        SelectedFileBotton.setEnabled(state);
+        SelectedFolderButton.setEnabled(state);
+    }
+
+    private void SelectedFolderButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SelectedFolderButtonMousePressed
+
+        if (!SelectedFolderButton.isEnabled()) {
+            return;
+        }
+
+        File carpeta = obtenerCarpeta();
+
+        if (carpeta != null) {
+            inicializarAjustesDeCarga(carpeta.getPath());
+            new Thread(() -> {
+
+                try {
+                    cargarManyElement(carpeta);
+                    // resultadosForm = new ResultadoProcesoXmlForm(NotaList.getIntance());
+                } catch (JAXBException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchMethodException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                inicializarFormResultados();
+            }).start();
+        }
+
+    }//GEN-LAST:event_SelectedFolderButtonMousePressed
+
+    public void setAnioPresentacion(String anio) {
         anioDeclaracionesJlabel.setText(anio);
-    } 
-     
-     
+    }
+
     private int recorrerArchivos(File carpeta, String extension) throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         int count = 0;
         File[] archivos = carpeta.listFiles();
@@ -258,13 +356,13 @@ public class XMLFileProcessorFrame extends JFrame {
         if (archivos != null) {
             for (File archivo : archivos) {
                 if (archivo.isFile()) {
-                   if (archivo.isFile() && archivo.getName().toLowerCase().endsWith(extension)) {
-                    count++;
-                    processSeccion(archivo);
-                     //  addJtextArea("PRESENTACION A - CORRECTA");
-                    addJtextArea("Archivo: " + archivo.getName());
-                    System.out.println("Archivo: " + archivo.getAbsolutePath());
-                   }
+                    if (archivo.isFile() && archivo.getName().toLowerCase().endsWith(extension)) {
+                        count++;
+                        processSeccion(archivo);
+                        //  addJtextArea("PRESENTACION A - CORRECTA");
+                        addJtextArea("Archivo pasado : " + archivo.getName());
+                        System.out.println("Archivo: " + archivo.getAbsolutePath());
+                    }
                 } else if (archivo.isDirectory()) {
                     System.out.println("Carpeta: " + archivo.getAbsolutePath());
                     // Llamada recursiva para la carpeta encontrada
@@ -272,82 +370,48 @@ public class XMLFileProcessorFrame extends JFrame {
                 }
             }
         }
+
+        System.out.println("actualizados" + NotaList.getIntance().getActualizados().size());
+        System.out.println("NO actualizados" + NotaList.getIntance().getNoActualizados().size());
+        System.out.println("ERRORES" + NotaList.getIntance().getConErrores().size());
         return count;
     }
-    
-    private void actualizarFuente(String tipo, String ruta){
+
+    private void actualizarFuente(String tipo, String ruta) {
         tipoArchivoLabel.setText(tipo);
         rutaArchivoLabel.setText(ruta);
     }
-    
-    private void cargarOneElement() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
-        fileChooser.setFileFilter(filter);
-        
-        int returnValue = fileChooser.showOpenDialog(null);
 
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            try {
-                
-                File selectedFile = fileChooser.getSelectedFile();
-                String fileName = selectedFile.getName(); // Obtiene solo el nombre del archivo
-                System.out.println(selectedFile.getAbsoluteFile());
-                System.out.println(selectedFile.getAbsolutePath());
-                System.out.println(selectedFile.getPath());
-                actualizarFuente("Archivo Cargado:", selectedFile.getAbsolutePath());
-                processSeccion(selectedFile);
-                
-                SwingUtilities.invokeLater(() -> {
-                    this.rutaArchivoLabel.requestFocusInWindow(); // Asegurarse de que el JTextArea tenga el foco
-                    this.rutaArchivoLabel.scrollRectToVisible(new Rectangle(0, 0, 1, 1)); // Desplazar al inicio
-                });
+    private void cargarOneElement(File selectedFile) throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-
+        limpiarListas();
+        String fileName = selectedFile.getName(); // Obtiene solo el nombre del archivo
+        System.out.println(selectedFile.getAbsoluteFile());
+        System.out.println(selectedFile.getAbsolutePath());
+        System.out.println(selectedFile.getPath());
+        actualizarFuente("Archivo Cargado:", selectedFile.getAbsolutePath());
+        processSeccion(selectedFile);
+        jLabelCantArchivos.setText("1");
     }
 
-    private void cargarManyElement() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    private void cargarManyElement(File carpetaSeleccionada) throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("XML Files", "xml");
-        fileChooser.setFileFilter(filter);
+        actualizarFuente("Carpeta cargada: ", carpetaSeleccionada.getAbsolutePath());
 
-        int returnValue = fileChooser.showOpenDialog(null);
-        
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            // Obtener la carpeta seleccionada
-            File carpetaSeleccionada = fileChooser.getSelectedFile();
-            actualizarFuente("Carpeta cargada: " , carpetaSeleccionada.getAbsolutePath());
-            
-            // Recorrer archivos dentro de la carpeta
-            int cantArchivos = recorrerArchivos(carpetaSeleccionada, ".xml");
-            
-            jLabelCantArchivos.setText(Integer.toString(cantArchivos));
-            System.out.println("total archivos encontrados: " + cantArchivos);
-        } else {
-            System.out.println("No se seleccionó ninguna carpeta.");
-        }
-    }
-   
-    
-   
-    private void selectAndProcessXMLFile() throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        jLabelCantArchivos.setText("0");
-        //cargarManyElement();
-         cargarOneElement();
+        limpiarListas();
+        // Recorrer archivos dentro de la carpeta
+        ArrayList<Object> listaNopasados = new ArrayList<>();
+        int cantArchivos = recorrerArchivos(carpetaSeleccionada, ".xml");
+
+        //addJtextArea(NotaList.getIntance().toString());
+        jLabelCantArchivos.setText(Integer.toString(cantArchivos));
+        System.out.println("total archivos encontrados: " + cantArchivos);
+
     }
 
     private <T extends XMLSeccion> void processSeccion(File selectedFile) throws JAXBException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         String nombre = selectedFile.getName();
-
+        DataBase db = DataBasePostGre.getInstance(true);
         // Verifica la validez del nombre de archivo
         if (!XMLSeccionA.esNombreValido(nombre) && !XMLSeccionB.esNombreValido(nombre)) {
             NotaList.getIntance().addNotaConErrores(selectedFile.getName(), "Nombre de presentacion incorrecto");
@@ -355,81 +419,72 @@ public class XMLFileProcessorFrame extends JFrame {
             return; // Salir si el nombre no es válido
         }
 
-        // Procesa según el tipo de sección
-        if (XMLSeccionA.esNombreValido(nombre)) {
-            XMLSeccionA xml = new XMLSeccionA(selectedFile);
-            //xml.validarPresentacion();
-            //this.jTextAreaOutput.removeAll();
-            //this.jTextAreaOutput.setText(xml.toString());
-          
-            System.out.println(xml.toString());
-            try {
-                if (xml.esPresentacionActualizable()) {
-                    xml.insertarEnBD(DataBasePostGre.getInstance(true));
-                    NotaList.getIntance().addNotaActualizados(
-                      selectedFile.getName(),
-                      "Presentacion actulizada con exito"
+        try {
+
+            if (XMLSeccionA.esNombreValido(nombre)) {
+                XMLSeccionA xml = new XMLSeccionA(selectedFile);
+
+                System.out.println(xml.toString());
+
+                if (xml.existeAgente(db)) {
+                    if (xml.esPresentacionActualizable(db)) {
+                        xml.insertarEnBD(DataBasePostGre.getInstance(true));
+                        NotaList.getIntance().addNotaActualizados(
+                                selectedFile.getName(),
+                                "Presentacion actulizada con exito"
+                        );
+                        return;
+                    }
+
+                    NotaList.getIntance().addNotaNoActualizados(
+                            selectedFile.getName(),
+                            "Ya existe un presentacion mas reciente"
                     );
                     return;
                 }
-               
-                NotaList.getIntance().addNotaNoActualizados(
-                           selectedFile.getName(),
-                           "Ya existe un presentacion mas reciente"
+                //No existe agente
+                NotaList.getIntance().addNotaConErrores(
+                        nombre, "| ERROR: el agente no existe"
+                );
+                //Puedes hacer algo con el objeto xml aquí si es necesario
+                return;
+            }
+
+            if (XMLSeccionB.esNombreValido(nombre)) {
+                XMLSeccionB xml = new XMLSeccionB(selectedFile);
+
+                if (xml.existeAgente(db)) {
+                    if (xml.esPresentacionActualizable(db)) {
+                        xml.insertarEnBD(db);
+                        NotaList.getIntance().addNotaActualizados(
+                                selectedFile.getName(),
+                                "Presentacion actulizada con exito"
                         );
-                
-                        
-                // Puedes hacer algo con el objeto xml aquí si es necesario
-            } catch (SQLException ex) {
-                Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-
-        if (XMLSeccionB.esNombreValido(nombre)) {
-            XMLSeccionB xml = new XMLSeccionB(selectedFile);
-
-            //        xml.validarPresentacion();
-            this.jTextAreaOutput.setText(xml.toString());
-
-        }
-    }
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                        return;
+                    }
+                    NotaList.getIntance().addNotaNoActualizados(
+                            selectedFile.getName(),
+                            "Ya existe un presentacion mas reciente"
+                    );
+                    return;
                 }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+                NotaList.getIntance().addNotaConErrores(
+                        nombre, "| ERROR: el agente no existe"
+                );
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new XMLFileProcessorFrame().setVisible(true);
             }
-        });
+        } catch (SQLException ex) {
+            Logger.getLogger(XMLFileProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SelectedFileBotton;
+    private javax.swing.JLabel SelectedFolderButton;
     private javax.swing.JLabel anioDeclaracionesJlabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelCantArchivos;
     private javax.swing.JPanel jPanel1;
@@ -437,5 +492,14 @@ public class XMLFileProcessorFrame extends JFrame {
     private javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JLabel rutaArchivoLabel;
     private javax.swing.JLabel tipoArchivoLabel;
+    private javax.swing.JButton viewResultButton;
     // End of variables declaration//GEN-END:variables
+
+    private void limpiarListas() {
+        NotaList nota = NotaList.getIntance();
+        nota.getActualizados().clear();
+        nota.getConErrores().clear();
+        nota.getNoActualizados().clear();
+    }
+
 }

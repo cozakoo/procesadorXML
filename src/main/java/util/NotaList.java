@@ -41,7 +41,7 @@ public class NotaList {
                 
     }
 
-    public List<DetalleNota> getNoActulizados() {
+    public List<DetalleNota> getNoActualizados() {
         return NoActulizados;
     }
 
@@ -60,6 +60,16 @@ public class NotaList {
          new DetalleNota(nombre, descripcion)
         );
     }
+
+    @Override
+    public String toString() {
+        StringBuilder resultado = new StringBuilder(); 
+        resultado.append("PRESENTACION A - PASADOS").append("\n");
+        //actualizados.forEach(element -> resultado.append(element.getNombreArchivo()).append("\n"));
+        
+        return resultado.toString();
+    }
+    
     
     
     

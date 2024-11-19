@@ -22,4 +22,9 @@ public class presentacionTypeSeccionB extends PresentacionType {
 
         return sb.toString();
     }
+
+    public AgentesRetencionType getAgenteRetencion() {
+        return agenteRetencion;
+    }
+    
 }

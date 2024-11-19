@@ -36,16 +36,19 @@
             <version>3.3</version>
             <type>jar</type>
         </dependency>
+        
         <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE180</version>
         </dependency>
+        
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
             <version>5.2.2</version>
         </dependency>
+        
         <!-- confi dependi as400-->
         <dependency>
             <groupId>net.sf.jt400</groupId>

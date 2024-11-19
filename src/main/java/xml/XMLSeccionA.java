@@ -5,10 +5,14 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,15 +33,20 @@ import presentacion.presentacion_A.type.EmpleadorEntidadType;
 import presentacion.presentacion_A.type.presentacionTypeSeccionA;
 import presentacion.presentacion_A.type.PeriodoType;
 import presentacion.presentacion_A.type.ingresoAporteType;
+import util.NotaList;
 import util.XmlUtils;
 import static util.XmlUtils.ExisteEtiqueta;
 import static util.XmlUtils.StringADate;
+import static util.XmlUtils.convertirAStringToFecha;
+import static util.XmlUtils.esPresentCargadaPosteriorPresentVigente;
 import static util.XmlUtils.isMesInicioEqualSMesFIN;
+import static util.XmlUtils.obtenerCodEmpresa;
 import static util.XmlUtils.obtenerNombreYApellido;
 import static util.XmlUtils.obtenerCodParentesto;
 import static util.XmlUtils.obtenerConceptoDeduccAdmitida;
 import static util.XmlUtils.obtenerDni;
 import static util.XmlUtils.obtenerFechaActual;
+import static util.XmlUtils.obtenerMesActual;
 import static util.XmlUtils.obtenerUltimaPresentacionVigente;
 
 @XmlRootElement(name = "presentacion")
@@ -59,12 +68,7 @@ public class XMLSeccionA extends XMLSeccion {
         return presentacion.toString();
     }
 
-    private BigDecimal getDniPresentacion() {
-        String docString = obtenerDni(presentacion.getEmpleado().getCuit());
-        return new BigDecimal(docString);
-    }
-
-    private void insertCargFamilia(List<CargaFamilia> familiares, DataBase db) throws SQLException {
+    private void insertCargFamilia(List<CargaFamilia> familiares, DataBase db) throws SQLException, Exception {
         String sql = IConsultaSql.consulta_familiar_insert;
         PreparedStatement pstmt = db.getPreparedStatement(sql);
 
@@ -105,13 +109,18 @@ public class XMLSeccionA extends XMLSeccion {
         String sql = IConsultaSql.consulta_ganliqOtrosEmpl_insert;
         PreparedStatement pstmt = db.getPreparedStatement(sql);
         for (EmpleadorEntidadType empleador : empleadores) {
-            int codEmp = util.XmlUtils.obtenerCodEmpresa(empleador.getCuit(), db);
+            int codEmp = obtenerCodEmpresa(empleador.getCuit(), db);
             List<ingresoAporteType> ingApList = empleador.getIngresosAportes().getIngAp();
             for (ingresoAporteType ingAp : ingApList) {
                 armarCuerpoGanLiqOTrosEmpEnt(codEmp, ingAp, pstmt);
             }
             pstmt.executeBatch();
         }
+    }
+
+    private BigDecimal getDniPresentacion() {
+        String docString = obtenerDni(presentacion.getEmpleado().getCuit());
+        return new BigDecimal(docString);
     }
 
     @Override
@@ -124,19 +133,23 @@ public class XMLSeccionA extends XMLSeccion {
         try {
             conexion.setAutoCommit(false);
             limpiarDatosAnteriores(this.getDniPresentacion(), db);
+
+            actualizarNuevosDatosAgente(db);
+
             if (ExisteEtiqueta(this.presentacion.getCargasFamilia())) {
                 insertCargFamilia(this.presentacion.getCargasFamilia().getCargasFamilia(), db);
             }
             if (ExisteEtiqueta(this.presentacion.getGanLiqOtrosEmpEnt())) {
                 insertGanLiqOTrosEmpEnt(this.presentacion.getGanLiqOtrosEmpEnt().getEmpleadores(), db);
             }
+
             if (ExisteEtiqueta(this.presentacion.getDeducciones())) {
                 insertDeducciones(this.presentacion.getDeducciones().getDeduccion(), db);
             }
+
             if (ExisteEtiqueta(this.presentacion.getRetPerPagos())) {
                 insertRetPerPagos(this.presentacion.getRetPerPagos().getRetenciones(), db);
             }
-
             conexion.commit();
             System.out.println("SE COMPLETO LA TRANSACCION EXITOSAMENTE");
 
@@ -144,14 +157,32 @@ public class XMLSeccionA extends XMLSeccion {
             try {
                 // Hacer rollback si hay un error
                 conexion.rollback();
+                System.out.println("Se realizó el rollback de la transacción.");
             } catch (SQLException ex) {
                 Logger.getLogger(XMLSeccionA.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("Se realizó el rollback de la transacción.");
-            e.printStackTrace();
+
+        } catch (ParseException ex) {
+            try {
+                conexion.rollback();
+                System.out.println("Se realizó el rollback de la transacción.");
+            } catch (SQLException ex1) {
+                Logger.getLogger(XMLSeccionA.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
+            Logger.getLogger(XMLSeccionA.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception ex) {
+            try {
+                conexion.rollback();
+                System.out.println("Se realizó el rollback de la transacción.");
+            } catch (SQLException ex1) {
+                Logger.getLogger(XMLSeccionA.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
+            Logger.getLogger(XMLSeccionA.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //FIN TRANSACCION
     }
 
     // Lógica para determinar si es Sección B
@@ -168,11 +199,18 @@ public class XMLSeccionA extends XMLSeccion {
         pstmt.setString(9, deduccion.getDenominacion());
         pstmt.setDate(10, obtenerFechaActual());
         pstmt.setInt(11, 0);
+        pstmt.setInt(12, 0);
+        pstmt.setInt(13, 0);
+        pstmt.setString(14, "");
+        pstmt.setInt(15, 0);
+        pstmt.setInt(16, 0);
 
         if (ExisteEtiqueta(deduccion.getDetalles())) {
             List<DetalleType> detalles = deduccion.getDetalles().getDetalle();
+
             for (DetalleType detalle : detalles) {
                 if ("tipoGasto".equals(detalle.getNombre())) {
+
                     pstmt.setInt(12, Integer.parseInt(detalle.getValor()));
                 }
                 if ("numeroDocFamiliar".equals(detalle.getNombre())) {
@@ -188,12 +226,6 @@ public class XMLSeccionA extends XMLSeccion {
                     pstmt.setInt(16, Integer.parseInt(detalle.getValor()));
                 }
             }
-        } else {
-            pstmt.setInt(12, 0);
-            pstmt.setInt(13, 0);
-            pstmt.setString(14, "");
-            pstmt.setInt(15, 0);
-            pstmt.setInt(16, 0);
 
         }
 
@@ -201,7 +233,7 @@ public class XMLSeccionA extends XMLSeccion {
 
     }
 
-    private void insertDeducciones(List<ConceptoType> deducciones, DataBase db) throws SQLException {
+    private void insertDeducciones(List<ConceptoType> deducciones, DataBase db) throws SQLException, Exception {
         String sql = IConsultaSql.consulta_deduccion_insert;
 
         PreparedStatement pstmt = db.getPreparedStatement(sql);
@@ -210,21 +242,49 @@ public class XMLSeccionA extends XMLSeccion {
         for (ConceptoType deduccion : deducciones) {
 
             String concepto = obtenerConceptoDeduccAdmitida(deduccion.getTipo(), db);
-            List<PeriodoType> periodos = deduccion.getPeriodos().getPeriodo();
-            for (PeriodoType periodo : periodos) {
-                double montoMensual = Double.parseDouble(periodo.getMontoMensual());
-                if (isMesInicioEqualSMesFIN(periodo.getMesDesde(), periodo.getMesHasta())) {
-                    armarCuerpoInsertDeduccion(pstmt, deduccion, concepto, periodo.getMesDesde(), montoMensual);
-                } else {
-
-                    for (int mes = periodo.getMesDesde(); mes <= periodo.getMesHasta(); mes++) {
-
+            if (deduccion.getTipo() == 99) {
+                if (ExisteEtiqueta(deduccion.getDetalles())) {
+                    List<DetalleType> detalles = deduccion.getDetalles().getDetalle();
+                    int motivo = 0;
+                    int mes = 0;
+                    double montoMensual = Double.parseDouble(deduccion.getMontoTotal());
+                    for (DetalleType detalle : detalles) {
+                        if ("motivo".equals(detalle.getNombre())) {
+                            motivo = Integer.parseInt(detalle.getValor());
+                        }
+                        if ("mes".equals(detalle.getNombre())) {
+                            mes = Integer.parseInt(detalle.getValor());
+                        }
+                    }
+                    if (motivo > 0 && motivo < 3 && mes > 0) {
                         armarCuerpoInsertDeduccion(pstmt, deduccion, concepto, mes, montoMensual);
+                        continue;
+                    }
 
+                    if (motivo == 3) {
+
+                    }
+                    continue;
+                }
+
+            }
+
+            if (ExisteEtiqueta(deduccion.getPeriodos())) {
+                List<PeriodoType> periodos = deduccion.getPeriodos().getPeriodo();
+                for (PeriodoType periodo : periodos) {
+                    double montoMensual = Double.parseDouble(periodo.getMontoMensual());
+                    if (isMesInicioEqualSMesFIN(periodo.getMesDesde(), periodo.getMesHasta())) {
+                        armarCuerpoInsertDeduccion(pstmt, deduccion, concepto, periodo.getMesDesde(), montoMensual);
+                    } else {
+
+                        for (int mes = periodo.getMesDesde(); mes <= periodo.getMesHasta(); mes++) {
+
+                            armarCuerpoInsertDeduccion(pstmt, deduccion, concepto, mes, montoMensual);
+
+                        }
                     }
                 }
             }
-
         }
 
         pstmt.executeBatch();
@@ -232,34 +292,23 @@ public class XMLSeccionA extends XMLSeccion {
     }
 
     @Override
-    public boolean esPresentacionActualizable() throws SQLException {
-        ResultSet rs = obtenerUltimaPresentacionVigente(this.getDniPresentacion());
-        if (!rs.next()) {
-            return true;
-        } else {
-            int excep = rs.getInt("excep");
-            int nropres = rs.getInt("nropres");
-            int periodo = rs.getInt("periodo");
-            System.out.println("DATOS OBTENIDOS exep, nropres, periodo "
-                    + excep + "," + nropres + "," + periodo);
-            int period2 = this.presentacion.getPeriodo();
-            int nroPres2 = this.presentacion.getNroPresentacion();
-            if (this.presentacion.getPeriodo() == periodo && this.presentacion.getNroPresentacion() < nropres) {
-                System.out.println("PRESENTACION ACTUALIZABLE");
-            }
+    public boolean esPresentacionActualizable(DataBase db) throws SQLException {
+        ResultSet rs = obtenerUltimaPresentacionVigente(db, this.getDniPresentacion());
+        rs.next();
 
-        }
+        int excep = rs.getInt("excep");
+        int nroPresenVigente = rs.getInt("nropres");
+        int periodoPresenVigente = rs.getInt("periodo");
+        System.out.println("DATOS OBTENIDOS exep, nropres, periodo "
+                + excep + "," + nroPresenVigente + "," + periodoPresenVigente);
 
-        return true;
-    }
-
-    private void limpiarDatosAnteriores(BigDecimal nrodocumento, DataBase db) throws SQLException {
-        Statement stat = db.creatStatement();
-        stat.addBatch(IConsultaSql.consulta_deduccion_delete + nrodocumento);
-        stat.addBatch(IConsultaSql.consulta_familiares_delete + nrodocumento);
-        stat.addBatch(IConsultaSql.consujlta_agente_delete + nrodocumento);
-        int[] resultados = stat.executeBatch();
-        System.out.println("Registros eliminados: " + resultados.length);
+        //datos presentacion carrgada
+        int nroPresenCargada = this.presentacion.getNroPresentacion();
+        int periodoPresenCargada = this.presentacion.getPeriodo();
+        return esPresentCargadaPosteriorPresentVigente(periodoPresenVigente,
+                nroPresenVigente,
+                periodoPresenCargada,
+                nroPresenCargada);
 
     }
 
@@ -267,7 +316,7 @@ public class XMLSeccionA extends XMLSeccion {
         pstmt.setBigDecimal(1, this.getDniPresentacion());
         pstmt.setString(2, concepto);
         pstmt.setDouble(3, montoMensual);
-        int mesActual = XmlUtils.obtenerMesActual();
+        int mesActual = obtenerMesActual();
         pstmt.setInt(4, mesActual);
         pstmt.setNull(5, java.sql.Types.INTEGER);
         //cod empresa -> parametro 6
@@ -331,7 +380,7 @@ public class XMLSeccionA extends XMLSeccion {
     private void armarCuerpoGanLiqOTrosEmpEnt(int codEmp, ingresoAporteType ingAp, PreparedStatement pstmt) throws SQLException {
         pstmt.setBigDecimal(1, this.getDniPresentacion());
         pstmt.setInt(2, codEmp);
-        pstmt.setInt(3, XmlUtils.obtenerMesActual());
+        pstmt.setInt(3, obtenerMesActual());
         pstmt.setDouble(4, obtenerGanNeta(ingAp));
         pstmt.setDouble(5, ingAp.getGanBrut());
         pstmt.setDouble(6, ingAp.getObraSoc());
@@ -363,6 +412,54 @@ public class XMLSeccionA extends XMLSeccion {
         pstmt.setDouble(28, ingAp.getConSimNat());
 
         pstmt.addBatch();
+    }
+
+    private void actualizarNuevosDatosAgente(DataBase db) throws SQLException, ParseException {
+        String sql = "UPDATE agentes SET fechaf572 = ?, fechapres = ?, fechaweb = ?, web = ?, "
+                + "wapellido = ?, wnombre = ?, wcp = ?, wlocalidad = ?, wcalle = ?, "
+                + "wnro = ?, wpiso = ?, wdpto = ?, wcuit = ?, excep = ?, nropres = ?, "
+                + "periodo = ?, wcuitreten = 0, wdescreten = '' WHERE documento = ?";
+
+        // Crear un PreparedStatement para la actualización
+        PreparedStatement pstmt = db.getConection().prepareStatement(sql);
+        Date fechaPres = convertirAStringToFecha(this.presentacion.getFechaPresentacion());
+        // Establecer los valores para los parámetros
+        int i = 0;
+        pstmt.setDate(++i, obtenerFechaActual());  // Nuevo nombre
+        pstmt.setDate(++i, fechaPres);      // Nuevo salario
+        pstmt.setDate(++i, obtenerFechaActual());    // Nuevo departamento
+        pstmt.setInt(++i, 1);
+        pstmt.setString(++i, this.presentacion.getEmpleado().getApellido());// ID del empleado a actualizar
+        pstmt.setString(++i, this.presentacion.getEmpleado().getNombre());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getCp());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getLocalidad());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getCalle());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getNro());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getPiso());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getDireccion().getDtp());
+        pstmt.setString(++i, this.presentacion.getEmpleado().getCuit());
+        pstmt.setInt(++i, 0);
+        pstmt.setInt(++i, this.presentacion.getNroPresentacion());
+        pstmt.setInt(++i, this.presentacion.getPeriodo());
+        pstmt.setBigDecimal(++i, getDniPresentacion());
+
+        // Ejecutar la actualización
+        int filasActualizadas = pstmt.executeUpdate();
+
+        if (filasActualizadas > 0) {
+            System.out.println("El empleado ha sido actualizado exitosamente. tuplas actualizadas: " + filasActualizadas);
+        } else {
+            System.out.println("No se encontró el empleado con el id 5.");
+        }
+
+    }
+
+    public boolean existeAgente(DataBase db) throws SQLException {
+        ResultSet rs = obtenerUltimaPresentacionVigente(db, this.getDniPresentacion());
+        if (!rs.next()) {
+            return false;
+        }
+        return true;
     }
 
 }
