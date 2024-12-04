@@ -222,6 +222,7 @@ public class ViewConcParam extends javax.swing.JFrame implements UpdateListener 
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MousePressed

@@ -1,0 +1,65 @@
+kimpgan
+divididos en dos partes---
+CONDICION 1 
+
+insert into kimpgan (SELECT 
+    K.codemp, 
+    K.seg, 
+    K.documento, 
+    MAX(K.nombre) AS nombre, -- MAX requiere un alias para evitar confusión
+    K.tliq, 
+    K.tipoigg,
+    SUM(K.monto) AS total_monto, -- SUM requiere un alias
+    K.mes_sue, 
+    K.mes_dev, 
+    K.mes,
+    CASE 
+        WHEN mes_dev = '' then cast(mes_sue as numeric)-1
+        ELSE cast (mes_dev as integer) 
+    END AS nmesdev 
+    -- El CASE necesita estar completo y debe tener un alias
+FROM 
+    kimpagrup K
+where (cast(mes_sue as numeric) % 100) >= 1
+GROUP BY 
+    K.codemp, 
+    K.seg, 
+    K.documento,
+    K.tliq, 
+    K.tipoigg, 
+    K.mes_sue, 
+    K.mes_dev, 
+    K.mes)
+
+CONDICION 2
+
+String query = "INSERT INTO kimpgan (SELECT "
+                + "    K.codemp, "
+                + "    K.seg, "
+                + "    K.documento, "
+                + "    MAX(K.nombre) AS nombre, "
+                + "    K.tliq, "
+                + "    K.tipoigg,"
+                + "    SUM(K.monto) AS total_monto, "
+                + "    K.mes_sue,"
+                + "    K.mes_dev, "
+                + "    K.mes,"
+                + "    CASE "
+                + "        WHEN mes_dev = '' then ((cast(mes_sue as numeric)/100)-1)*100+11"
+                + "        ELSE cast (mes_dev as integer) "
+                + "    END AS nmesdev "
+                + "FROM "
+                + "    kimpagrup K "
+                + "where (cast(mes_sue as numeric) % 100) = 1 "
+                + "GROUP BY "
+                + "    K.codemp, "
+                + "    K.seg, "
+                + "    K.documento,"
+                + "    K.tliq, "
+                + "    K.tipoigg, "
+                + "    K.mes_sue, "
+                + "    K.mes_dev, "
+                + "    K.mes )";
+
+
+

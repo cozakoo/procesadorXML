@@ -1,9 +1,9 @@
 package main;
 
-
+import IU.Forms.ImportacionFondosForm;
 import IU.Forms.MenuPrincipal;
-import IU.Forms.MenuPrincipalForm;
 import IU.Forms.ViewConcParam;
+import IU.Forms.ViewTableGeneric;
 //import IU.NewJFrame;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import IU.Forms.XMLFileProcessorFrame;
@@ -18,15 +18,17 @@ public class Main {
 
         DataBasePostGre db = DataBasePostGre.getInstance(true);
         db.inicializar("cliente");
+        new ImportacionFondosForm().setVisible(true);
+        //new ViewTableGeneric("TABLA REMUNERA","remunera", db).setVisible(true);
 //
 //        java.awt.EventQueue.invokeLater(() -> {
 //            new XMLFileProcessorFrame().setVisible(true);
 //        });
-       // new ViewConcParam(db).setVisible(true);
+        // new ViewConcParam(db).setVisible(true);
         //new AltaConcParam().setVisible(true);
-        new MenuPrincipal().setVisible(true);
+        new MenuPrincipal(db).setVisible(true);
         //new MenuPrincipalForm().setVisible(true);
-        
+
     }
 
 }

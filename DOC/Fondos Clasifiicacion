@@ -1,0 +1,14 @@
+RENTAS:
+  CONCEPTOS:                       |     SAF
+  -> FONEST                              32
+  -> FONESTNG  (NG = NO GRAVADO)         32
+
+
+FONAVI 
+   CONCEPTOS:                      |    SAF
+   ->FONAVI                             302
+
+
+SEC TRABAJO                        
+   CONCEPTOS:                      |    SAF
+   -> FSTRAB                            15

@@ -6,8 +6,14 @@ package IU.Forms;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import static java.lang.System.load;
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import main.DataBase;
 import main.DataBasePostGre;
+import tablas.KimpaGrup;
+import util.Mensaje;
 
 /**
  *
@@ -18,8 +24,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form MenuPrincipal
      */
-    public MenuPrincipal() {
+    DataBase db;
+
+    public MenuPrincipal(DataBase db) {
         initComponents();
+        this.db = db;
         configEvents();
     }
 
@@ -41,6 +50,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         jScrollPane1.setToolTipText("");
 
+        jTree1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("IMPORTACION DE DATOS");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("DATOS MAP AS/400");
@@ -49,10 +59,20 @@ public class MenuPrincipal extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("DATOS XML");
         treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("GENERAR KIMPAGRUP");
+        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("CALCULOS Y PROCESAMIENTO");
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("CONFIGURACION TABLAS");
         javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("TABLA CONCPARAM");
+        treeNode3.add(treeNode4);
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("GENERACION TABLAS");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("GENERAR REMUNERA");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("GENERAR CUOTAPAG");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("GENERAR CUOTADEV");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("LIQUIDACION");
@@ -65,7 +85,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 255));
-        jLabel1.setText("SISTEMA DE IIGG");
+        jLabel1.setText("DGC- SISTEMA DE IIGG");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -73,25 +93,21 @@ public class MenuPrincipal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addGap(17, 17, 17))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(159, 159, 159)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(159, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(139, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(113, 113, 113))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+                .addGap(35, 35, 35)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addGap(139, 139, 139))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(49, 49, 49)
-                    .addComponent(jLabel1)
-                    .addContainerGap(439, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,55 +122,60 @@ public class MenuPrincipal extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuPrincipal().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
-    
-    
-    private void openForm(String programName){
-        if("DATOS XML".equals(programName)) new XMLFileProcessorFrame().setVisible(true);
-        if("TABLA CONCPARAM".equals(programName))new ViewConcParam(DataBasePostGre.getInstance(true)).setVisible(true);
+
+    private void generarKimpagrup() {
+        LoadingAnimado load = new LoadingAnimado();
+        load.setVisible(true);
+        if (new KimpaGrup(db).isGenerable()) {
+            load.setVisible(false);
+            Mensaje.exito("KIMPAGRUP GENERADO CON EXITO");
+
+        } else {
+            load.setVisible(false);
+            Mensaje.advertencia("NO SE PUDO GENERAR TABLA,EXISTEN CONCEPTOS NO ENCONTRADOS");
+        }
+        
     }
+
+    private void openForm(String programName) {
+        if ("DATOS XML".equals(programName)) {
+            new XMLFileProcessorFrame().setVisible(true);
+        }
+        if ("TABLA CONCPARAM".equals(programName)) {
+            new ViewConcParam(DataBasePostGre.getInstance(true)).setVisible(true);
+        }
+
+        if ("GENERAR KIMPAGRUP".equals(programName)) {
+            new GenerarKimpaGrupForm().setVisible(true);
+//           Runnable tarea = () -> generarKimpagrup();
+//           Thread hilo = new Thread(tarea);
+//           hilo.start();
+        }
+    }
+    
+    
+
     private void configEvents() {
-       
-     jTree1.addMouseListener(new MouseAdapter() {
+        String dirActual = System.getProperty("user.dir");
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+
+        // Cambiar solo el ícono de las hojas
+        renderer.setLeafIcon(new ImageIcon(dirActual + "\\images\\navegador.png")); // Reemplaza con la ruta de tu ícono
+
+        // Aplicar el renderizador al árbol
+        jTree1.setCellRenderer(renderer);
+
+        jTree1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // Doble clic
@@ -166,7 +187,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                     }
                 }
             }
-        });   
-     //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        });
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

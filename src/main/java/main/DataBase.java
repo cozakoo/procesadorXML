@@ -35,7 +35,8 @@ public abstract class DataBase {
         }
         return null;
     }
-
+   
+    
     public Connection getConection() {
         return connection;
 
@@ -48,4 +49,10 @@ public abstract class DataBase {
     public Statement creatStatement() throws SQLException{
         return connection.createStatement();
     }
+    
+    public int Update(String query) throws SQLException{
+        PreparedStatement ps = connection.prepareStatement(query);
+        return ps.executeUpdate();
+    }
+    
 }

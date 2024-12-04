@@ -23,3 +23,12 @@ where porcen = 100
 group by docfam
 having count(documento) > 1 ) 
 order by docfam
+
+
+#conceptos que no existe o codemp not exist, kimpagroup
+
+select k.codemp, k.nombre from kimpagrup as k 
+left join empresas as e
+on k.codemp = e.codemp 
+WHERE e.codemp IS NULL
+group by k.codemp, k.nombre
