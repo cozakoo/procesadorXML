@@ -29,6 +29,7 @@ public class ViewTableGeneric extends javax.swing.JFrame {
         this.db = db;
         setNameTittle(tittle);
         setTable(tableName);
+        obtenerCantRegistros();
     }
 
     /**
@@ -44,8 +45,10 @@ public class ViewTableGeneric extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         tableNameLabel = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        cantRegistrosLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -60,8 +63,13 @@ public class ViewTableGeneric extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable);
 
-        tableNameLabel.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        tableNameLabel.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        tableNameLabel.setForeground(new java.awt.Color(51, 153, 255));
         tableNameLabel.setText("NOMBRE TABLA ");
+
+        jLabel1.setText("Cantidad Registros:");
+
+        cantRegistrosLabel.setText("-----------");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -69,12 +77,20 @@ public class ViewTableGeneric extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cantRegistrosLabel)
+                        .addGap(29, 29, 29))))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(282, 282, 282)
+                .addGap(305, 305, 305)
                 .addComponent(tableNameLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,7 +99,11 @@ public class ViewTableGeneric extends javax.swing.JFrame {
                 .addComponent(tableNameLabel)
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cantRegistrosLabel))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -98,6 +118,7 @@ public class ViewTableGeneric extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void setTable(String tableName) {
@@ -121,8 +142,14 @@ public class ViewTableGeneric extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    javax.swing.JLabel cantRegistrosLabel;
     javax.swing.JScrollPane jScrollPane1;
     javax.swing.JTable jTable;
     javax.swing.JLabel tableNameLabel;
     // End of variables declaration//GEN-END:variables
+
+    private void obtenerCantRegistros() {
+       cantRegistrosLabel.setText(Integer.toString(jTable.getRowCount()));
+       //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

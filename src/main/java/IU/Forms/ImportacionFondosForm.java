@@ -5,7 +5,16 @@
 package IU.Forms;
 
 import java.io.File;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import main.DataBase;
+import tablas.Fondos;
 import util.FileUtils;
+import util.Mensaje;
 
 /**
  *
@@ -17,9 +26,20 @@ public class ImportacionFondosForm extends javax.swing.JFrame {
      * Creates new form FormImportacionFondos
      */
     private File fileSelected;
-           
-    public ImportacionFondosForm() {
+    final static int POS_DOC = 2;
+    final static int CANT_DOC = 8;
+    final static int POST_MONTO = 41;
+    final static int CANT_MONTO = 10;
+    final static String[] tipos = {"FONAVI", "RENTAS", "SEC.TRABAJO"};
+    private DataBase db;
+    
+    
+    
+    
+    public ImportacionFondosForm(DataBase db) {
         initComponents();
+        this.db = db;
+        cargarTipos();
     }
 
     /**
@@ -35,13 +55,22 @@ public class ImportacionFondosForm extends javax.swing.JFrame {
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         javax.swing.JButton jButton1 = new javax.swing.JButton();
+        javax.swing.JButton jButton2 = new javax.swing.JButton();
+        tipoCbox = new javax.swing.JComboBox<>();
+        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
+        noGravadoCheck = new javax.swing.JCheckBox();
+        gravadoCheck = new javax.swing.JCheckBox();
         archivoSeleccLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 255));
         jLabel1.setText("IMPORTACION DE FONDOS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, -1, -1));
 
         jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\dgc06\\Documents\\Proyectos Java Netbeans\\procesadorXML\\images\\importar.png")); // NOI18N
         jLabel2.setText(" Cargar Archivo ");
@@ -50,76 +79,188 @@ public class ImportacionFondosForm extends javax.swing.JFrame {
                 jLabel2MousePressed(evt);
             }
         });
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(0, 153, 255));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("IMPORTAR");
+        jButton1.setText("VISUALIZAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 240, -1, 32));
 
-        archivoSeleccLabel.setText(".");
+        jButton2.setBackground(new java.awt.Color(0, 153, 255));
+        jButton2.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("IMPORTAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, -1, 32));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(128, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(archivoSeleccLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(110, 110, 110))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel2)
-                                .addComponent(jButton1))
-                            .addGap(167, 167, 167)))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20)
-                .addComponent(archivoSeleccLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
-        );
+        tipoCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipoCboxActionPerformed(evt);
+            }
+        });
+        jPanel1.add(tipoCbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jLabel3.setText("Tipo de Fondo:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, -1, -1));
+
+        noGravadoCheck.setText("No gravado");
+        noGravadoCheck.setEnabled(false);
+        noGravadoCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noGravadoCheckActionPerformed(evt);
+            }
+        });
+        jPanel1.add(noGravadoCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
+
+        gravadoCheck.setSelected(true);
+        gravadoCheck.setText("Gravado");
+        gravadoCheck.setEnabled(false);
+        gravadoCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gravadoCheckActionPerformed(evt);
+            }
+        });
+        jPanel1.add(gravadoCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, -1, -1));
+
+        archivoSeleccLabel.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        archivoSeleccLabel.setText("Archivo seleccionado:");
+        jPanel1.add(archivoSeleccLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 330));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void jLabel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MousePressed
         // TODO add your handling code here:
         File file = FileUtils.obtenerFile("txt", "Archivo TXT");
-        if(file != null){
+        if (file != null) {
             this.fileSelected = file;
-            archivoSeleccLabel.setText("Archivo seleccionado: "+ file.getName());
+            archivoSeleccLabel.setText("Archivo seleccionado: " + file.getName());
         }
     }//GEN-LAST:event_jLabel2MousePressed
+
+    private void tipoCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoCboxActionPerformed
+        // TODO add your handling code here:
+        if (tipoCbox.getSelectedIndex() == 1) {
+            gravadoCheck.setEnabled(true);
+            noGravadoCheck.setEnabled(true);
+            return;
+        }
+
+        gravadoCheck.setEnabled(false);
+        noGravadoCheck.setEnabled(false);
+    }//GEN-LAST:event_tipoCboxActionPerformed
+
+    private void gravadoCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gravadoCheckActionPerformed
+        // TODO add your handling code here:
+        if (gravadoCheck.isSelected())
+            noGravadoCheck.setSelected(false);
+    }//GEN-LAST:event_gravadoCheckActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if( seCargoArchivoEsteMes(fileSelected.getName())){
+        if (!Mensaje.confirmar("¿El archivo ya ha sido cargo este mes, desea volver a cargarlo?", "confirmacion")) return;
+        }
+        String concep = obtenerConcep();
+        
+        int saf = obtenerSaf(concep);
+        
+        Fondos f = new Fondos(fileSelected,concep, saf, db);
+        
+        f.generar();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void noGravadoCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noGravadoCheckActionPerformed
+        // TODO add your handling code here:
+        if (noGravadoCheck.isSelected())
+            gravadoCheck.setSelected(false);
+    }//GEN-LAST:event_noGravadoCheckActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        new ViewTableGeneric("TABLA FONDOS", "fondossaf", db).setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JLabel archivoSeleccLabel;
+    javax.swing.JCheckBox gravadoCheck;
+    javax.swing.JCheckBox noGravadoCheck;
+    javax.swing.JComboBox<String> tipoCbox;
     // End of variables declaration//GEN-END:variables
+
+    private void cargarTipos() {
+        for (String tipo : tipos) {
+            tipoCbox.addItem(tipo);
+        }
+    }
+
+    private String obtenerConcep() {
+        String fona = "FONAVI";
+        
+        if(tipoCbox.getSelectedItem().equals("FONAVI")){
+            return "FONAVI";
+        }
+        if(tipoCbox.getSelectedItem().equals("RENTAS")){
+            return gravadoCheck.isSelected() ? "FONEST" : "FONESTNG";
+        }
+         if(tipoCbox.getSelectedItem().equals("SEC.TRABAJO")){
+            return "FSTRAB";
+        }
+       
+       
+        return null;
+    }
+
+    private int obtenerSaf(String concep) {
+         
+        if(concep.contains("FONEST")) return 32;          
+        if (concep.equals("FONAVI")) return 302;
+        if (concep.equals("FSTRAB")) return 15;
+        
+        
+        return 1;
+          //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private boolean seCargoArchivoEsteMes(String name) {
+        try {
+            String query = "select fecha_carga from historial_carga_fondos where nombre_archivo = '"+name+"'";
+            LocalDate fechaAcutal = util.XmlUtils.obtenerFechaActual().toLocalDate();
+            ResultSet consulta = db.consulta(query);
+            if(consulta.next()) {
+                LocalDate fecha = consulta.getDate(1).toLocalDate();
+                
+                if((fecha.getMonth() == fechaAcutal.getMonth())
+                   & (fecha.getYear() == fechaAcutal.getYear())){
+                return true;
+                }
+            
+            }
+            
+         
+            //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        } catch (SQLException ex) {
+            Logger.getLogger(ImportacionFondosForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          return false;
+    }
 }

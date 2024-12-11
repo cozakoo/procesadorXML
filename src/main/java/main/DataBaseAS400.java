@@ -19,11 +19,11 @@ public class DataBaseAS400 extends DataBase{
        dotenv = Dotenv.load();
        Class.forName("com.ibm.as400.access.AS400JDBCDriver");
         if ("server".equals(modo)) {
-            connection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
+            connection = DriverManager.getConnection(dotenv.get("DB_AS400_URL"), dotenv.get("DB_AS400_USER"), dotenv.get("DB_AS400_PASS"));
             stmt = connection.createStatement();
         } else {
 
-            connection = DriverManager.getConnection(dotenv.get("DB_URL"), dotenv.get("DB_USER"), dotenv.get("DB_PASS"));
+            connection = DriverManager.getConnection(dotenv.get("DB_AS400_URL"), dotenv.get("DB_AS400_USER"), dotenv.get("DB_AS400_PASS"));
             stmt = connection.createStatement();
 
         }

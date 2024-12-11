@@ -1,0 +1,11 @@
+select codemp , l_seg, SUBSTR(l_mlega,4,8) documento,
+l_mayn nombre, l_tliq, tipoigg, sum(l_dimp),2024 mes_sue, 
+RIGHT(p.l_ddesc,6) mes_dev,10 mes 
+from (select * from PIOCCA.ENE24  as e left join DBGAN24X.CONCPARAM c 
+on e.l_dley = c.ley and e.l_dconc = c.conc 
+left join DBGAN24X.empresas as m 
+on m.claveseg = e.l_seg) as p 
+where l_dconc < 2700 AND l_seg not in ('NVG', 'NPG' ) AND IIGG = 1 
+GROUP BY codemp ,l_seg, SUBSTR(l_mlega, 4,  8), 
+l_mayn , l_tliq , tipoigg, RIGHT(p.l_ddesc,6)
+order by 1,2

@@ -1,5 +1,6 @@
 package main;
 
+import IU.Forms.GenerarFondosForm;
 import IU.Forms.ImportacionFondosForm;
 import IU.Forms.MenuPrincipal;
 import IU.Forms.ViewConcParam;
@@ -16,17 +17,15 @@ public class Main {
     public static void main(String[] args) throws UnsupportedLookAndFeelException, Exception {
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
-        DataBasePostGre db = DataBasePostGre.getInstance(true);
-        db.inicializar("cliente");
-        new ImportacionFondosForm().setVisible(true);
-        //new ViewTableGeneric("TABLA REMUNERA","remunera", db).setVisible(true);
-//
-//        java.awt.EventQueue.invokeLater(() -> {
-//            new XMLFileProcessorFrame().setVisible(true);
-//        });
-        // new ViewConcParam(db).setVisible(true);
-        //new AltaConcParam().setVisible(true);
-        new MenuPrincipal(db).setVisible(true);
+//        DataBasePostGre db = DataBasePostGre.getInstance(true);
+//        db.inicializar("cliente");
+//        new GenerarFondosForm().setVisible(true);
+//        new MenuPrincipal(db).setVisible(true);
+         
+          DataBase db400 = DataBaseAS400.getInstance(true);
+          db400.inicializar("cliente");
+          new ViewTableGeneric("TABLA CONCPARAM", "DBGAN24X.CONCPARAM", db400).setVisible(true);
+
         //new MenuPrincipalForm().setVisible(true);
 
     }
